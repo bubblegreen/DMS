@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<table id="image-list" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>序号</th>
+            <th>镜像名称</th>
+            <th>镜像tag</th>
+            <th></th>
+        </tr>
+    </thead>
+    {% for image in images %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ image.name }}</td>
+            <td>{{ image.tag }}</td>
+            <td>
+                {% if image.local %}
+                    <button id="remove" onclick="Image.remove('{{ image.name }}', '{{ image.tag }}')" value="remove">删除</button>
+                    <button id="run" onclick="" value="run">创建容器</button>
+                {% else %}
+                    <button id="pull" onclick="Image.pull('{{ image.name }}', '{{ image.tag }}')" value="pull">拉取</button>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
