@@ -1,18 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Docker Manager</title>
-        <script src="{{ url_for('static', filename='js/image.js') }}" ></script>
-        <script src="{{ url_for('static',filename='js/jquery-3.2.1.min.js') }}"></script>
-    </head>
-    <body>
-        <div id="content" class="container">
+{% extends "bootstrap/base.html" %}
+{% block title %}Docker Manager{% endblock %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% block head %}
+    {{super()}}
+    <meta charset="UTF-8">
+    <script src="{{ url_for('static', filename='js/image.js') }}" ></script>
+    <!--<script src="{{ url_for('static',filename='js/jquery-3.2.1.min.js') }}"></script>-->
+{% endblock %}
+{% block content %}
+    <div id="loadDiv" class="modal fade">
+        <div class="modal-dialog modal-sm">
+            <img src="{{ url_for('static', filename='img/load.gif') }}" />
         </div>
-        <script type="text/javascript">
-            $(function () {
-                Image.getList();
-            })
-        </script>
-    </body>
-</html>
+    </div>
+    <div id="content" class="container">
+        <table id="imageTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>镜像名称</th>
+                    <th>镜像tag</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="imageList">
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(function () {
+            startLoad();
+            Image.getList();
+        })
+    </script>
+{% endblock %}
+
+<!--<html lang="en">-->
+    <!--<head>-->
+        <!--<meta charset="UTF-8">-->
+        <!--<title>Docker Manager</title>-->
+        <!--<script src="{{ url_for('static', filename='js/image.js') }}" ></script>-->
+        <!--<script src="{{ url_for('static',filename='js/jquery-3.2.1.min.js') }}"></script>-->
+    <!--</head>-->
+    <!--<body>-->
+        <!--<div id="loadDiv" class="modal fade">-->
+            <!--<div class="modal-dialog modal-sm">-->
+                <!--<img src="{{ url_for('static', filename='img/load.gif') }}" />-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div id="content" class="container">-->
+        <!--</div>-->
+        <!--<script type="text/javascript">-->
+            <!--$(function () {-->
+                <!--$('#loadDiv').modal('hide');-->
+                <!--Image.getList();-->
+            <!--})-->
+        <!--</script>-->
+    <!--</body>-->
+<!--</html>-->

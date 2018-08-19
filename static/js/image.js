@@ -1,10 +1,18 @@
 var Image = function () {
 };
 
+function startLoad(){
+    $('#loadDiv').modal({backdrop:'static',keyboard:false});
+}
+function stopLoad(){
+    $('#loadDiv').modal('hide');
+}
+
 Image.getList = function () {
-    var element = $("#content");
-    element.empty();
+    var element = $("#imageList");
+    //element.empty();
     element.load('/image/list', function () {
+        stopLoad();
     });
 };
 
@@ -19,6 +27,9 @@ Image.remove = function (name, tag) {
             'Content-Type': 'application/json'
         },
         dataType: 'json',
+        beforeSend: function(){
+            startLoad();
+        },
         success: function (data) {
             if ('state' in data && data.state === 'error') {
                 alert(data.message);
@@ -41,6 +52,9 @@ Image.pull = function (name, tag) {
             'Content-Type': 'application/json'
         },
         dataType: 'json',
+        beforeSend: function(){
+            startLoad();
+        },
         success: function (data) {
             if ('state' in data && data.state === 'error') {
                 alert(data.message);
