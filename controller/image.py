@@ -21,9 +21,11 @@ def get_image_list():
 
 @image_view.route('/image/pull', methods=['POST'])
 def pull_image():
-    image_vo = json.load(request.json, cls=Image)
+    image_dict = json.loads(request.data.decode())
+    image_vo = Image("name", "tag")
+    image_vo.__dict__ = image_dict
     res = image.pull_image(image_vo)
-    return res
+    return json.dumps(res)
 
 
 @image_view.route('/image/remove', methods=['POST'])
@@ -32,7 +34,7 @@ def remove_image():
     image_vo = Image("name", "tag")
     image_vo.__dict__ = image_dict
     res = image.remove_image_local(image_vo)
-    return res
+    return json.dumps(res)
 
 
 if __name__ == '__main__':
