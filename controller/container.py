@@ -5,7 +5,7 @@
 from vo.container import Container
 import json
 from service import container
-from flask import request, blueprints
+from flask import request, blueprints, render_template
 
 
 container_view = blueprints.Blueprint('container', __name__)
@@ -17,11 +17,12 @@ def get_container_list():
     return json.dumps(res)
 
 
-@container_view.route('/container/filter', methods=['POST'])
+@container_view.route('/container/filter')
 def get_container_filtered():
-    param_dict = json.load(request.json, dict)
-    res = container.get_filtered_container(**param_dict)
-    return json.dumps(res)
+    image = request.args.get('image')
+    ancestor = [image,]
+    res = container.get_filtered_container(ancestor=ancestor)
+    return render_template('container_list.html', image=image, containers=list(res['containers']))
 
 
 @container_view.route('/container/start')

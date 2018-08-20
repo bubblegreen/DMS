@@ -1,18 +1,20 @@
 var Image = function () {
 };
 
-function startLoad(){
-    $('#loadDiv').modal({backdrop:'static',keyboard:false});
+function startLoad(id){
+    var identify = '#' + id;
+    $(identify).modal({backdrop:'static',keyboard:false});
 }
-function stopLoad(){
-    $('#loadDiv').modal('hide');
+function stopLoad(id){
+    var identify = '#' + id;
+    $(identify).modal('hide');
 }
 
 Image.getList = function () {
     var element = $("#imageList");
     //element.empty();
     element.load('/image/list', function () {
-        stopLoad();
+        stopLoad('loadDiv');
     });
 };
 
@@ -28,7 +30,7 @@ Image.remove = function (name, tag) {
         },
         dataType: 'json',
         beforeSend: function(){
-            startLoad();
+            startLoad('loadDiv');
         },
         success: function (data) {
             if ('state' in data && data.state === 'error') {
@@ -53,7 +55,7 @@ Image.pull = function (name, tag) {
         },
         dataType: 'json',
         beforeSend: function(){
-            startLoad();
+            startLoad('loadDiv');
         },
         success: function (data) {
             if ('state' in data && data.state === 'error') {

@@ -1,0 +1,27 @@
+<span>镜像：{{ image }}</span>
+    <table id="containerTable" class="table table-bordered">
+        <thead>
+            <tr>序号</tr>
+            <tr>名称</tr>
+            <tr>状态</tr>
+            <tr></tr>
+        </thead>
+        <tbody>
+            {% for container in containers %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ container.name }}</td>
+                    <td>{{ container.status }}
+                    <td>
+                        {% if 'exited' in container.status or 'Exited' in container.status %}
+                            <button id="start" onclick="Container.start('{{ container.name }}','{{ image }}')" value="start">启动</button>
+                        {% else %}
+                            <button id="stop" onclick="Container.stop('{{ container.name }}','{{ image }}')" value="stop">停止</button>
+                            <button id="restart" onclick="Container.restart('{{ container.name }}','{{ image }}')" value="restart">重启</button>
+                        {% endif %}
+                        <button id="delete" onclick="Container.remove('{{ container.name }}','{{ image }}')" value="remove">删除</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>

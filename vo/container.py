@@ -6,14 +6,14 @@ import json
 
 
 class Container:
-    def __init__(self, name, image, port_exp={}, env=[], bind=[], port_bind={}):
+    def __init__(self, name, image, port_exp=None, env=None, bind=None, port_bind=None):
         self.name = name
         self.Image = image
         self.ExposedPorts = port_exp
-        self.Env = env
+        self.Env = [] if env is None else env
         self.HostConfig = {}
-        self.HostConfig['Binds'] = bind
-        self.HostConfig['PortBindings'] = port_bind
+        self.HostConfig['Binds'] = bind if bind is not None else {}
+        self.HostConfig['PortBindings'] = port_bind if port_bind is not None else {}
 
 
 class ContainerEncoder(json.JSONEncoder):
