@@ -1,4 +1,4 @@
-<span>镜像：{{ image }}</span>
+<span>镜像：{{ image }}</span><br>
     <table id="containerTable" class="table table-bordered">
         <thead>
             <tr>序号</tr>
@@ -13,7 +13,7 @@
                     <td>{{ container.name }}</td>
                     <td>{{ container.status }}
                     <td>
-                        {% if 'exited' in container.status or 'Exited' in container.status %}
+                        {% if 'Create' in container.status or 'Exited' in container.status %}
                             <button id="start" onclick="Container.start('{{ container.name }}','{{ image }}')" value="start">启动</button>
                         {% else %}
                             <button id="stop" onclick="Container.stop('{{ container.name }}','{{ image }}')" value="stop">停止</button>

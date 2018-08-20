@@ -79,9 +79,9 @@ def restart_container(container_name) -> dict:
 
 
 if __name__ == '__main__':
-    # container = Container('mariadb', '192.168.23.26:5000/mariadb:latest', {'3306/tcp': {}},
-    #                       ['MYSQL_ROOT_PASSWORD=aisino'], ['/home/mariadb:/var/lib/mysql'],
-    #                       {"3306/tcp": [{"HostPort": "3308"}]})
+    container = Container('mariadb', '192.168.23.26:5000/mariadb:latest', {'3306/tcp': {}},
+                          ['MYSQL_ROOT_PASSWORD=aisino'], ['/home/mariadb:/var/lib/mysql'],
+                          {"3306/tcp": [{"HostPort": "3308"}]})
     # r = create_container(container)
     # r = start_container(container.name)
 

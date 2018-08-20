@@ -1,0 +1,23 @@
+<div>
+    <table>
+        <tr>
+            <td><span>镜像：{{ image }}</span></td>
+        </tr>
+        <tr>
+            <td><span>名称：<input type="text" id="name" /></span></td>
+        </tr>
+        <tr>
+            <td><span>Export Port：<input type="text" id="expPort" />exemple:3306/tcp,8080/tcp</span></td>
+        </tr>
+        <tr>
+            <td><span>Host Port：<input type="text" id="hostPort" />exemple:3306,8080</span></td>
+        </tr>
+        <tr>
+            <td><span>Volume：<input type="text" id="volume" />exemple:/home/mariadb:/var/lib/mysq, /home/registry:/var/lib/registry</span></td>
+        </tr>
+        <tr>
+            <td><span>Env：<input type="text" id="env" />exemple:MYSQL_ROOT_PASSWORD=aisino,MYSQL_USER=aisino</span></td>
+        </tr>
+    </table>
+    <button id="create" onclick="Container.create('{{ image }}')" value="create">创建</button>
+</div>

@@ -6,7 +6,7 @@
         <td>
             {% if image.local %}
                 <button id="remove" onclick="Image.remove('{{ image.name }}', '{{ image.tag }}')" value="remove">删除</button>
-                <button id="run" onclick="" value="run">创建容器</button>
+                <button id="run" onclick="Container.createNew('{{ image.name }}', '{{ image.tag }}')" value="run">创建容器</button>
                 <button id="container" onclick="Container.getList('{{ image.name + ':' + image.tag | safe }}')" value="container">查看容器</button>
             {% else %}
                 <button id="pull" onclick="Image.pull('{{ image.name }}', '{{ image.tag }}')" value="pull">拉取</button>
