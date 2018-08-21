@@ -1,0 +1,9 @@
+{
+  "images": {
+    "192.168.23.26:5000/mariadb:latest": "Maria数据库最新版本",
+    "192.168.23.26:5000/registry:latest": "Docker Registry最新版本"
+  },
+  "containers":{
+    "registry": "测评中心Docker镜像库"
+  }
+}

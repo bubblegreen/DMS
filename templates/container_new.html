@@ -2,29 +2,33 @@
     <span>镜像：{{ image }}</span>
     <table>
         <tbody class="table" style="">
-            <tr>
-                <td style="width: 20%"><span>名称：</span></td>
-                <td><input type="text" id="name"/></td>
-            </tr>
-            <tr>
-                <td style="width: 20%"><span>Export Port：</span></td>
-                <td><input type="text" id="expPort"/><br><span>exemple:3306/tcp,8080/tcp</span></td>
-            </tr>
-            <tr>
-                <td style="width: 20%"><span>Host Port：</span></td>
-                <td><input type="text" id="hostPort"/><br><span>exemple:3306,8080</span></td>
-            </tr>
-            <tr>
-                <td style="width: 20%"><span>Volume：</span></td>
-                <td>
-                    <input type="text" id="volume"/><br>
-                    <span>exemple:/home/mariadb:/var/lib/mysq, /home/registry:/var/lib/registry</span>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 20%"><span>Env：</span></td>
-                <td><input type="text" id="env"/><br><span>exemple:MYSQL_ROOT_PASSWORD=aisino,MYSQL_USER=aisino</span></td>
-            </tr>
+        <tr>
+            <td style="width: 20%"><span>名称：</span></td>
+            <td><input type="text" id="name"/></td>
+        </tr>
+        {#            <tr>#}
+        {#                <td style="width: 20%"><span>说明：</span></td>#}
+        {#                <td><input type="text" id="desp"/></td>#}
+        {#            </tr>#}
+        <tr>
+            <td style="width: 20%"><span>Export Port：</span></td>
+            <td><input type="text" id="expPort"/><br><span>exemple:3306/tcp,8080/tcp</span></td>
+        </tr>
+        <tr>
+            <td style="width: 20%"><span>Host Port：</span></td>
+            <td><input type="text" id="hostPort"/><br><span>exemple:3306,8080</span></td>
+        </tr>
+        <tr>
+            <td style="width: 20%"><span>Volume：</span></td>
+            <td>
+                <input type="text" id="volume"/><br>
+                <span>exemple:/home/mariadb:/var/lib/mysq, /home/registry:/var/lib/registry</span>
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 20%"><span>Env：</span></td>
+            <td><input type="text" id="env"/><br><span>exemple:MYSQL_ROOT_PASSWORD=aisino,MYSQL_USER=aisino</span></td>
+        </tr>
         </tbody>
     </table>
     <button id="create" onclick="Container.create('{{ image }}')" value="create">创建</button>

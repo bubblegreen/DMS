@@ -6,6 +6,7 @@ from vo.image import Image
 import api.docker_api as d_api
 import api.regitstry_api as r_api
 from utils import request as rq
+from utils import storage as sg
 
 
 def get_images_in_registry():
@@ -36,9 +37,11 @@ def get_all_images() -> list:
     image_list = []
     images_in_registry = get_images_in_registry()
     images_in_docker = get_images_in_docker()
+    image_storage = sg.get_image_storage()
     for image in images_in_registry:
         image_merged = image
         image_merged.local = True if image in images_in_docker else False
+        image_merged.desp = image_storage['%s:%s' % (image_merged.name, image_merged.tag)]
         image_list.append(image_merged)
     return image_list
 

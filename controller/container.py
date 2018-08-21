@@ -6,7 +6,7 @@ from vo.container import Container
 import json
 from service import container
 from flask import request, blueprints, render_template
-
+# from utils import storage as sg
 
 container_view = blueprints.Blueprint('container', __name__)
 
@@ -20,7 +20,7 @@ def get_container_list():
 @container_view.route('/container/filter')
 def get_container_filtered():
     image = request.args.get('image')
-    ancestor = [image,]
+    ancestor = [image, ]
     res = container.get_filtered_container(ancestor=ancestor)
     return render_template('container_list.html', image=image, containers=list(res['containers']))
 
@@ -56,21 +56,25 @@ def remove_container():
 @container_view.route('/container/create', methods=['POST'])
 def create_container():
     param_dict = json.loads(request.data.decode())
-    expPortDict = {}
+    exp_port_dict = {}
     for expPort in param_dict['expPort']:
-        expPortDict[expPort] = {}
-    envLst = []
+        exp_port_dict[expPort] = {}
+    env_lst = []
     for env in param_dict['env']:
-        envLst.append(env)
-    volumeLst = []
+        env_lst.append(env)
+    volume_lst = []
     for volume in param_dict['volume']:
-        volumeLst.append(volume)
-    bindIpDict = {}
-    for expIp, hostPort in zip(param_dict['expPort'], param_dict['hostPort']):
-        bindIpDict[expIp] = [{'HostPort': hostPort}]
-    container_vo = Container(param_dict['name'], param_dict['image'], expPortDict, envLst, volumeLst, bindIpDict)
+        volume_lst.append(volume)
+    bind_ip_dict = {}
+    for exp_ip, host_port in zip(param_dict['expPort'], param_dict['hostPort']):
+        bind_ip_dict[exp_ip] = [{'HostPort': host_port}]
+    container_vo = Container(param_dict['name'], param_dict['image'], exp_port_dict, env_lst, volume_lst, bind_ip_dict)
     res = container.create_container(container_vo)
+    # container_storage = sg.get_container_storage()
+    # container_storage[param_dict['name']] = param_dict['desp']
+    # sg.update_container_storage(container_storage)
     return json.dumps(res)
+
 
 @container_view.route('/container/new')
 def container_new():

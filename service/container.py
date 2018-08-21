@@ -6,6 +6,7 @@ import api.docker_api as d_api
 from utils import request as rq
 import json
 from vo.container import Container, ContainerEncoder
+from utils import storage as sg
 
 
 def create_container(container_vo: Container) -> dict:
@@ -35,12 +36,15 @@ def get_filtered_container(all_container=True, ancestor: list = None, name: list
     query_param = 'all=%s&filters=%s' % (all_container, filter_param)
     response = rq.request_docker(d_api.list_container, query_params=query_param)
     if response.status_code == 200:
+        container_storage = sg.get_container_storage()
         container_list = response.json()
         containers = []
         for container in container_list:
             container_name = (container['Names'][0])[1:]
             container_status = container['Status']
-            containers.append({"name": container_name, "status":container_status})
+            # container_desp = container_storage[container_name]
+            # containers.append({"name": container_name, "status": container_status, "desp": container_desp})
+            containers.append({"name": container_name, "status": container_status})
         return {"containers": containers}
     return {'state': 'error', 'message': response.text}
 
@@ -79,11 +83,11 @@ def restart_container(container_name) -> dict:
 
 
 if __name__ == '__main__':
-    container = Container('mariadb', '192.168.23.26:5000/mariadb:latest', {'3306/tcp': {}},
-                          ['MYSQL_ROOT_PASSWORD=aisino'], ['/home/mariadb:/var/lib/mysql'],
-                          {"3306/tcp": [{"HostPort": "3308"}]})
+    # container = Container('mariadb', '192.168.23.26:5000/mariadb:latest', {'3306/tcp': {}},
+    #                       ['MYSQL_ROOT_PASSWORD=aisino'], ['/home/mariadb:/var/lib/mysql'],
+    #                       {"3306/tcp": [{"HostPort": "3308"}]})
     # r = create_container(container)
     # r = start_container(container.name)
 
-    r = get_filtered_container(ancestor=['192.168.23.26:5000/mariadb:latest',])
+    r = get_filtered_container(ancestor=['192.168.23.26:5000/mariadb:latest', ])
     print(r)

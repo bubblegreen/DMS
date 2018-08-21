@@ -4,19 +4,20 @@
 
 
 class Image:
-    def __init__(self, name, tag, local=None, remote=None):
+    def __init__(self, name, tag, local=None, remote=None, desp=None):
         self.name = name
         self.tag = tag
         self.local = local
         self.remote = remote
+        self.desp = desp
 
     def __str__(self) -> str:
-        return "{'name':'%s', 'tag':'%s','local':'%s','remote':'%s'}" \
-               % (self.name, self.tag, self.local, self.remote)
+        return "{'name':'%s', 'tag':'%s','local':'%s','remote':'%s', 'desp': '%s'}" \
+               % (self.name, self.tag, self.local, self.remote, self.desp)
 
     def __repr__(self) -> str:
-        return "{'name':'%s', 'tag':'%s','local':'%s','remote':'%s'}" \
-               % (self.name, self.tag, self.local, self.remote)
+        return "{'name':'%s', 'tag':'%s','local':'%s','remote':'%s', 'desp': '%s'}" \
+               % (self.name, self.tag, self.local, self.remote, self.desp)
 
     def __eq__(self, o: object) -> bool:
         if o is None:

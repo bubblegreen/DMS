@@ -77,6 +77,7 @@ Container.createNew = function(image, tag){
 
 Container.create = function(image){
     var name = $('#name').val();
+    var desp = $('#desp').val();
     var exportPortLst = $('#expPort').val().split(',');
     var hostPortLst = $('#hostPort').val().split(',');
     var volumeLst = $('#volume').val().split(',');
@@ -84,7 +85,7 @@ Container.create = function(image){
     $.ajax({
         type: 'post',
         url: url_obj.create,
-        data: JSON.stringify({"name": name, "image": image, "expPort": exportPortLst, "volume": volumeLst, "env": envLst, 'hostPort': hostPortLst}),
+        data: JSON.stringify({"name": name, "desp": desp, "image": image, "expPort": exportPortLst, "volume": volumeLst, "env": envLst, 'hostPort': hostPortLst}),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

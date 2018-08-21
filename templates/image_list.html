@@ -3,6 +3,7 @@
         <td>{{ loop.index }}</td>
         <td>{{ image.name }}</td>
         <td>{{ image.tag }}</td>
+        <td>{{ image.desp }}</td>
         <td>
             {% if image.local %}
                 <button id="remove" onclick="Image.remove('{{ image.name }}', '{{ image.tag }}')" value="remove">删除</button>
