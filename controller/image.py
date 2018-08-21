@@ -6,15 +6,12 @@ from service import image
 from flask import request, render_template, blueprints
 import json
 from vo.image import Image
-import logging
-
 
 image_view = blueprints.Blueprint('image', __name__)
 
 
 @image_view.route('/image/list')
 def get_image_list():
-    logging.debug('request image list')
     images = image.get_all_images()
     return render_template('image_list.html', images=images)
 
