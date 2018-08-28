@@ -4,7 +4,7 @@
     "192.168.23.26:5000/registry:latest": "Docker Registry最新版本",
     "192.168.23.26:5000/centos:7": "CentOS 7镜像",
     "192.168.23.26:5000/wbox:latest":"-w盒子自动化测试工具",
-    "192.168.23.26:5000/fphelper:latest ":"进项助手-长软挡板工具"
+    "192.168.23.26:5000/fphelper:latest":"进项助手-长软挡板工具"
   },
   "containers":{
     "registry": "测评中心Docker镜像库"
