@@ -55,7 +55,7 @@ def pull_image(image: Image) -> dict:
 
 
 def remove_image_local(image: Image) -> dict:
-    path_param = image.name
+    path_param = '%s:%s' % (image.name, image.tag)
     response = rq.request_docker(d_api.remove_image, path_params=path_param)
     if response.status_code == 200:
         return {'state': 'ok', 'message': ''}
