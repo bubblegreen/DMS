@@ -41,7 +41,7 @@ def get_all_images() -> list:
     for image in images_in_registry:
         image_merged = image
         image_merged.local = True if image in images_in_docker else False
-        image_merged.desp = image_storage['%s:%s' % (image_merged.name, image_merged.tag)]
+        image_merged.desp = image_storage.get('%s:%s' % (image_merged.name, image_merged.tag), '')
         image_list.append(image_merged)
     return image_list
 
