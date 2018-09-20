@@ -61,10 +61,12 @@ def create_container():
         exp_port_dict[expPort] = {}
     env_lst = []
     for env in param_dict['env']:
-        env_lst.append(env)
+        if not env and env != '':
+            env_lst.append(env)
     volume_lst = []
     for volume in param_dict['volume']:
-        volume_lst.append(volume)
+        if not volume and volume != '':
+            volume_lst.append(volume)
     bind_ip_dict = {}
     for exp_ip, host_port in zip(param_dict['expPort'], param_dict['hostPort']):
         bind_ip_dict[exp_ip] = [{'HostPort': host_port}]
