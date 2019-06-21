@@ -1,0 +1,95 @@
+2019-06-20 12:46:40,887 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 12:48:18,840 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 12:48:34,531 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 12:50:00,373 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 12:50:38,237 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 12:52:05,046 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:00:47,965 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:01:54,852 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:08:35,524 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:08:42,218 ERROR: Exception on /dashboard [GET] [in /Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py:1780]
+Traceback (most recent call last):
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/_compat.py", line 36, in reraise
+    raise value
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/aisino/Projects/DockerManager/app/main/routes.py", line 42, in dashboard
+    if endpoint_info.lower() != 'swarm':
+AttributeError: 'dict' object has no attribute 'lower'
+2019-06-20 13:09:06,723 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:12:17,016 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:14:36,228 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:16:02,019 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:17:21,673 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:76]
+2019-06-20 13:17:34,747 ERROR: Exception on /dashboard [GET] [in /Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py:1780]
+Traceback (most recent call last):
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/_compat.py", line 36, in reraise
+    raise value
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/aisino/Projects/DockerManager/app/main/routes.py", line 42, in dashboard
+    if endpoint_info['mode'].lower() != 'swarm':
+KeyError: 'mode'
+2019-06-20 15:05:58,121 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 15:25:29,259 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 16:39:55,459 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 16:40:34,766 ERROR: Exception on /image/db_list [GET] [in /Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py:1780]
+Traceback (most recent call last):
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/_compat.py", line 36, in reraise
+    raise value
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/aisino/Projects/DockerManager/app/image/routes.py", line 20, in get_images
+    for image in services.get_images(endpoint_id):
+  File "/Users/aisino/Projects/DockerManager/app/image/services.py", line 42, in get_images
+    images_in_docker = merge_image_info(images_in_docker, images_in_db_dict, images_exclude_ids, reverse)
+  File "/Users/aisino/Projects/DockerManager/app/image/services.py", line 49, in merge_image_info
+    if image['attrs']['Id'] in images_exclude_ids or (reverse and image['id'] not in images_in_db_dict):
+TypeError: 'Image' object is not subscriptable
+2019-06-20 16:50:27,862 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 16:57:20,591 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 16:58:29,757 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 16:59:55,214 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:02:06,965 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:03:39,938 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:11:49,199 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:12:43,524 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:13:04,968 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:16:45,462 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:28:27,478 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-20 17:29:45,836 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 08:19:50,345 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:44:27,503 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:44:34,437 INFO: request login [in /Users/aisino/Projects/DockerManager/app/auth/routes.py:15]
+2019-06-21 09:44:42,851 INFO: request login [in /Users/aisino/Projects/DockerManager/app/auth/routes.py:15]
+2019-06-21 09:44:43,312 INFO: User: xuhang was login [in /Users/aisino/Projects/DockerManager/app/auth/routes.py:28]

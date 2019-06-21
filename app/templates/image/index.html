@@ -1,0 +1,176 @@
+<div class="container">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <!-- PAGE HEADER-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <!-- BREADCRUMBS -->
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="#">Images</a>
+                            </li>
+                        </ul>
+                        <!-- /BREADCRUMBS -->
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+            <!--row-->
+            <div id="main">
+                {% if permission in ['pull', 'create'] %}
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Pull image</h4>
+                            </div>
+                            <div class="box-body">
+                                <div class="col-sm-12">
+                                    <form id="pull-image" name="pull-image" class="form-inline">
+                                        {{ pull_form_content | safe }}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="separator"></div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box border primary">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Images</h4>
+                            </div>
+                            <div class="box-body big">
+                                <menu>
+                                    {% if permission == 'create' %}
+                                    <button id="remove" class="btn btn-danger" onclick="image.remove()" disabled><i
+                                            class="fa fa-trash-o"></i>
+                                        删除镜像
+                                    </button>
+                                    <button id="add" class="btn btn-primary"
+                                            onclick="dm.show_edit_view('image', 'new')"><i
+                                            class="fa fa-plus"></i> 创建镜像
+                                    </button>
+                                    {% endif %}
+                                </menu>
+                                <span id="del-msg" style="display: none"></span>
+                                <table id="table" class="table select">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center"><input type="checkbox" name="selectAll"
+                                                                              id="select-all"></th>
+                                        <th>ID</th>
+                                        <th>Tags</th>
+                                        <th>Size</th>
+                                        <th>创建时间</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}";
+        $().ready(function () {
+            let table = $('#table').DataTable({
+                ajax: '/image/db_list',
+                columnDefs: [
+                    {
+                        targets: 0,
+                        data: null,
+                        defaultContent: '',
+                        orderable: false,
+                        searchable: false,
+                        className: 'dt-body-center',
+                        render: function (data, type, full, meta) {
+                            if (data[4]) {
+                                return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        targets: 1,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            let content = data[0].substring(0, 37) + '...';
+                            return '<a href="javascript:;" onclick="dm.show_detail_view(\'image\', \'update\', \'' + data[0] + '\')" title="' + data[0] + '">' + content;
+                        }
+                    },
+                    {
+                        targets: 2,
+                        data: null,
+                        orderable: false,
+                        render: function (data, type, full, meta) {
+                            let html = '';
+                            for (let tag in data[1]) {
+                                html = html + ('<span class="label label-primary">' + data[1][tag] + '</span>&nbsp;');
+                            }
+                            return html;
+                        }
+                    },
+                    {
+                        targets: 3,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[2] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 4,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[3] + '</span>';
+                        }
+                    }
+                ],
+                order: [[1, 'asc']]
+            });
+            // Handle click on "Select all" control
+            $('#select-all').on('click', function () {
+                // Get all rows with search applied
+                let rows = table.rows({'search': 'applied'}).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
+                if (row_selected.length === 0) {
+                    $('#remove').attr('disabled', true);
+                } else {
+                    $('#remove').attr('disabled', false);
+                }
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table tbody').on('change', 'input[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    let el = $('#select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
+                if (row_selected.length === 0) {
+                    $('#remove').attr('disabled', true);
+                } else {
+                    $('#remove').attr('disabled', false);
+                }
+            });
+        });
+    </script>
+</div>

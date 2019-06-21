@@ -1,0 +1,11 @@
+<p>Dear {{ user.username }},</p>
+<p>
+    确认注册，请
+    <a href="{{ url_for('auth.register_confirm', token=token, _external=True) }}">
+        点击
+    </a>。
+</p>
+<p>或者，复制下面的地址到浏览器到地址栏：</p>
+<p>{{ url_for('auth.register_confirm', token=token, _external=True) }}</p>
+<p>如果你没有注册，请忽略此消息。</p>
+<p>Aisino Docker Manager</p>

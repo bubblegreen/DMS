@@ -1,0 +1,149 @@
+<div class="container">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <!-- PAGE HEADER-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <!-- BREADCRUMBS -->
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="#">Groups</a>
+                            </li>
+                            <li>
+                                {{ action }}
+                            </li>
+                        </ul>
+                        <!-- /BREADCRUMBS -->
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+            <!--row-->
+            <div id="main">
+                <div class="row">
+                    <div class="col-md-10">
+                        <!-- BOX -->
+                        <div class="box border primary">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>{{ action }}</h4>
+                            </div>
+                            <div class="box-body big">
+                                <form id="group" name="group" class="form-horizontal">
+
+                                    <div class="form-group">
+                                        {{ form.name.label(for='name', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.name(class='form-control') }}
+                                            {% for error in form.name.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.desc.label(for='desc', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.desc(class='form-control') }}
+                                            {% for error in form.desc.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.members.label(for='members', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.members(class='select-multiple') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2">
+                                            {% if action == 'New' %}
+                                            <button class="btn btn-success" onclick="save(event)">提交</button>
+                                            {% else %}
+                                            <button class="btn btn-success" onclick="update(event)">提交</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /BOX -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}";
+        var id = "{{ group_id }}";
+        $().ready(function () {
+            $('#members').select2({
+                allowClear: true,
+                formatNoMatches: function () {
+                    return '';
+                },
+                //closeOnSelect: false,
+                width: '100%'
+            });
+        });
+
+        function save(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            $.ajax({
+                url: '/group/new',
+                type: 'post',
+                data: $('form').serialize(),
+                processData: false,  // 不处理数据
+                // contentType: false,
+                success: function (result) {
+                    if (result === 'ok') {
+                        let viewUrl = '/group';
+                        dm.showIndexView(viewUrl);
+                    } else {
+                        dm.loadView(result);
+                    }
+                },
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+
+        function update(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            $.ajax({
+                url: '/group/update/' + id,
+                type: 'post',
+                data: $('form').serialize(),
+                processData: false,  // 不处理数据
+                // contentType: false,
+                success: function (result) {
+                    if (result === 'ok') {
+                        let viewUrl = '/group';
+                        dm.showIndexView(viewUrl);
+                    } else {
+                        dm.loadView(result);
+                    }
+                },
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+    </script>
+</div>

@@ -1,0 +1,9 @@
+Dear {{ user.username }},
+
+确认注册，请点击下面到链接：
+
+{{ url_for('auth.register_confirm', token=token, _external=True) }}
+
+如果你没有注册，请忽略此消息。
+
+Aisino Docker Manager

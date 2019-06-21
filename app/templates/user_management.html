@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+    <th>#</th>
+    <th>username</th>
+    <th>email</th>
+    <th>name</th>
+    <th>active</th>
+    <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users%}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.active }}</td>
+        <td><a href="{{url_for('auth.active_user',user_id=user.id)}}">操作</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

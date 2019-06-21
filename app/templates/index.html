@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Aisino Docker Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <!-- STYLESHEETS -->
+    <link href="/static/css/cloud-admin.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="/static/css/themes/default.css">
+    <link href="/static/css/responsive.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/dataTables/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/css/animate/animate.min.css" rel="stylesheet" type="text/css">
+    <link href="/static/js/select2/select2.min.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        .box-endpoint:hover{
+            background-color: #f0f0f0!important;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+<!-- HEADER -->
+<header class="navbar clearfix" id="header">
+    <div class="container">
+        <div class="navbar-brand">
+            <!-- COMPANY LOGO -->
+            <a href="/index">
+                <img src="/static/img/logo/logo.png" alt="Aisino Docker Manager Logo" class="img-responsive" height="30"
+                     width="120">
+            </a>
+            <!-- /COMPANY LOGO -->
+            <!-- TEAM STATUS FOR MOBILE -->
+            <div class="visible-xs">
+                <a href="#" class="team-status-toggle switcher btn dropdown-toggle">
+                    <i class="fa fa-users"></i>
+                </a>
+            </div>
+            <!-- /TEAM STATUS FOR MOBILE -->
+            <!-- SIDEBAR COLLAPSE -->
+            <div id="sidebar-collapse" class="sidebar-collapse btn">
+                <i class="fa fa-bars"
+                   data-icon1="fa fa-bars"
+                   data-icon2="fa fa-bars"></i>
+            </div>
+            <!-- /SIDEBAR COLLAPSE -->
+        </div>
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <ul class="nav navbar-nav pull-right">
+            <!-- BEGIN USER LOGIN DROPDOWN -->
+            <li class="dropdown user" id="header-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="username">Hi,&nbsp {{ current_user.username }}</span>
+                    <i class="fa fa-angle-down"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/auth/logout"><i class="fa fa-power-off"></i>退出</a></li>
+                </ul>
+            </li>
+            <!-- END USER LOGIN DROPDOWN -->
+        </ul>
+        <!-- END TOP NAVIGATION MENU -->
+    </div>
+</header>
+
+<!-- PAGE -->
+<section id="page">
+    <!-- SIDEBAR -->
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-menu nav-collapse">
+            <div class="divide-20"></div>
+
+            <!-- SIDEBAR MENU -->
+            <ul>
+                <li class="active">
+                    <a href="/">
+                        <i class="fa fa-home fa-fw"></i> <span class="menu-text">首页</span>
+                        <span class="selected"></span>
+                    </a>
+                </li>
+                <li class="has-sub" id="docker" style="display: none;">
+                    <a href="javascript:;">
+                        <i class="fa fa-bookmark-o fa-fw"></i>
+                        <span class="menu-text" id="endpoint"></span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub">
+                        <li id="dashboard">
+                            <a href="javascript:;">
+                                <i class="fa fa-tachometer fa-fw"></i>
+                                <span class="menu-text" value="dashboard">Dashboard</span>
+                            </a>
+                        </li>
+                        <li id="stack">
+                            <a href="javascript:;">
+                                <i class="fa fa-th-list fa-fw"></i>
+                                <span class="menu-text" value="stack">Stacks</span>
+                            </a>
+                        </li>
+                        <li id="service" class="swarm">
+                            <a href="javascript:;">
+                                <i class="fa fa-list-alt fa-fw"></i>
+                                <span class="menu-text" value="service">Services</span>
+                            </a>
+                        </li>
+                        <li id="container">
+                            <a href="javascript:;">
+                                <i class="fa fa-inbox fa-fw"></i>
+                                <span class="menu-text" value="container">Containers</span>
+                            </a>
+                        </li>
+                        <li id="image">
+                            <a href="javascript:;">
+                                <i class="fa fa-desktop fa-fw"></i>
+                                <span class="menu-text" value="image">Images</span>
+                            </a>
+                        </li>
+                        <li id="network">
+                            <a href="javascript:;">
+                                <i class="fa fa-sitemap fa-fw"></i>
+                                <span class="menu-text" value="network">Networks</span>
+                            </a>
+                        </li>
+                        <li id="volume">
+                            <a href="javascript:;">
+                                <i class="fa fa-folder fa-fw"></i>
+                                <span class="menu-text" value="volume">Volumes</span>
+                            </a>
+                        </li>
+                        <li id="swarm" class="swarm">
+                            <a href="javascript:;">
+                                <i class="fa fa-cogs fa-fw"></i>
+                                <span class="menu-text" value="swarm">Swarm</span>
+                            </a>
+                        </li>
+                        <li id="host" class="standalone">
+                            <a href="javascript:;">
+                                <i class="fa fa-th fa-fw"></i>
+                                <span class="menu-text" value="host">Host</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="has-sub" id="settings">
+                    <a href="javascript:;">
+                        <i class="fa fa-bookmark-o fa-fw"></i>
+                        <span class="menu-text">设置</span>
+                        <span class="arrow"></span>
+                    </a>
+                    <ul class="sub">
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-user fa-fw"></i>
+                                <span class="menu-text" value="user">用户</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <i class="fa fa-users fa-fw"></i>
+                                <span class="menu-text" value="group">组</span>
+                            </a>
+                        </li>
+                        <li class="admin">
+                            <a href="javascript:;">
+                                <i class="fa fa-cloud fa-fw"></i>
+                                <span class="menu-text" value="endpoint">Endpoints</span>
+                            </a>
+                        </li>
+                        <li class="admin" id="registry">
+                            <a href="javascript:;">
+                                <i class="fa fa-cloud-upload fa-fw"></i>
+                                <span class="menu-text" value="registry">Registries</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <!-- /SIDEBAR MENU -->
+        </div>
+    </div>
+    <!-- /SIDEBAR -->
+    <div id="main-content">
+
+
+        <div class="container">
+            <div class="row">
+                <div id="content" class="col-lg-12">
+                    <!-- PAGE HEADER-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="page-header">
+                                <!-- STYLER -->
+
+                                <!-- /STYLER -->
+                                <!-- BREADCRUMBS -->
+                                <ul class="breadcrumb">
+                                    <li>
+                                        <i class="fa fa-home"></i>
+                                        <a href="/">首页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /PAGE HEADER -->
+                    <!--row-->
+                    {% for endpoint in endpoint_list %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- BOX -->
+                            <div class="box border blue">
+                                <div class="box-title">
+                                    <h4 value="{{ endpoint.db.id }}"><i class="fa fa-bars"></i>{{ endpoint.db.name }}</h4>
+                                    {% if endpoint.stat == 'up' %}
+                                    <span class="label label-success">up</span>
+                                    {% else %}
+                                    <span class="label label-danger">down</span>
+                                    {% endif %}
+                                </div>
+                                <div class="box-body{% if endpoint.stat == 'up' %} box-endpoint {%endif%}">
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <ul class="list-unstyled list-inline">
+                                                <li><i class="fa fa-th-list"></i> {{ endpoint.stacks_num }} stacks</li>
+                                                {% if endpoint.mode == 'Swarm' %}
+                                                <li><i class="fa fa-list-alt"></i> {{ endpoint.services_num }} services
+                                                </li>
+                                                {% endif %}
+                                                <li><i class="fa fa-inbox"></i> {{ endpoint.containers_num }} containers
+                                                    -
+                                                    <span class="badge badge-green"> {{ endpoint.container_run_num }} </span>&nbsp;<span
+                                                            class="badge badge-red"> {{ endpoint.container_stop_num }}</span>
+                                                </li>
+                                                <li><i class="fa fa-folder"></i> {{ endpoint.volumes_num }} volumes</li>
+                                                <li><i class="fa fa-desktop"></i> {{ endpoint.images_num }} images</li>
+                                                <div class="pull-right">
+                                                    <span>{{ endpoint.mode }} {{ endpoint.version }}</span>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-9">
+                                            <ul class="list-unstyled list-inline">
+                                                <li>CPU: {{ endpoint.cpu_num }}</li>
+                                                <li>MEM: {{ endpoint.mem_num }}GB</li>
+                                                <div class="pull-right">
+                                                    <span>{{ endpoint.db.url }}</span>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /BOX -->
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<!--/PAGE -->
+<!-- JAVASCRIPTS -->
+<!-- Placed at the end of the document so the pages load faster -->
+<!-- JQUERY -->
+<script type="text/javascript" src="/static/js/jquery/jquery-2.0.3.min.js"></script>
+<!-- JQUERY UI-->
+<script type="text/javascript" src="/static/js/jquery-ui/jquery-ui-1.10.3.custom.min.js"></script>
+<!-- BOOTSTRAP -->
+<script type="text/javascript" src="/static/js/bootstrap/bootstrap.min.js"></script>
+<!-- SLIMSCROLL -->
+<script type="text/javascript" src="/static/js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="/static/js/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+<!-- BLOCK UI -->
+<script type="text/javascript" src="/static/js/jQuery-BlockUI/jquery.blockUI.min.js"></script>
+<!-- SELECT2 -->
+<script type="text/javascript" src="/static/js/select2/select2.min.js"></script>
+<!-- UNIFORM -->
+<script type="text/javascript" src="/static/js/uniform/jquery.uniform.min.js"></script>
+<!-- WIZARD -->
+<script type="text/javascript" src="/static/js/bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
+<!-- WIZARD -->
+<script type="text/javascript" src="/static/js/jquery-validate/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-validate/additional-methods.min.js"></script>
+<!-- BOOTBOX -->
+<script type="text/javascript" src="/static/js/bootbox/bootbox.min.js"></script>
+<!--DATATABLES-->
+<script type="text/javascript" src="/static/js/dataTables/jquery.dataTables.js"></script>
+<script type="text/javascript" src="/static/js/dataTables/dataTables.select.min.js"></script>
+<!-- COOKIE -->
+<script type="text/javascript" src="/static/js/jQuery-Cookie/jquery.cookie.min.js"></script>
+<!-- CUSTOM SCRIPT -->
+<script type="text/javascript" src="/static/js/script.js"></script>
+<script type="text/javascript" src="/static/js/echarts.min.js"></script>
+<script type="text/javascript" src="/static/js/dm.js"></script>
+<script type="text/javascript" src="/static/js/image.js"></script>
+<script>
+    let endpoint = "{{ endpoint if endpoint else '' | safe }}";
+    jQuery(document).ready(function () {
+        App.init(); //Initialise plugins and elements
+        $('ul.sub > li > a').each(function () {
+            let viewType = $(this).children('span')[0].getAttribute('value').toLowerCase();
+            $(this).on('click', {'viewType': viewType}, dm.addMenuClick);
+        });
+        $('div.box-endpoint').on('click', dm.loadEndpoint);
+        dm.menu("{{ role }}", "{{ mode }}", "{{ endpoint_name }}", {{ permissions | safe }});
+    });
+</script>
+<!-- /JAVASCRIPTS -->
+</body>
+</html>

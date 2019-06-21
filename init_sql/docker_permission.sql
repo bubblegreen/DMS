@@ -1,0 +1,11 @@
+INSERT INTO docker.permission (id, name, type, value) VALUES (1, 'image', 'veiw', 1);
+INSERT INTO docker.permission (id, name, type, value) VALUES (2, 'image', 'pull', 2);
+INSERT INTO docker.permission (id, name, type, value) VALUES (3, 'image', 'create', 3);
+INSERT INTO docker.permission (id, name, type, value) VALUES (4, 'container', 'veiw', 1);
+INSERT INTO docker.permission (id, name, type, value) VALUES (5, 'container', 'create', 2);
+INSERT INTO docker.permission (id, name, type, value) VALUES (6, 'network', 'veiw', 1);
+INSERT INTO docker.permission (id, name, type, value) VALUES (7, 'network', 'create', 2);
+INSERT INTO docker.permission (id, name, type, value) VALUES (8, 'volume', 'veiw', 1);
+INSERT INTO docker.permission (id, name, type, value) VALUES (9, 'volume', 'create', 2);
+INSERT INTO docker.permission (id, name, type, value) VALUES (10, 'endpoint', 'view', 1);
+INSERT INTO docker.permission (id, name, type, value) VALUES (11, 'endpoint', 'create', 2);

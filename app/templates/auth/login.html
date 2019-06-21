@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>AISINO DOCKER MANAGER</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" type="text/css" href="/static/css/cloud-admin.css">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- UNIFORM -->
+    <link rel="stylesheet" type="text/css" href="/static/js/uniform/css/uniform.default.min.css"/>
+    <!-- ANIMATE -->
+    <link rel="stylesheet" type="text/css" href="/static/css/animate/animate.min.css"/>
+</head>
+<body class="login">
+<section class="page">
+    <header>
+        <!-- NAV-BAR -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-4">
+                    <div id="logo">
+                        <a href="{{ url_for('main.index') }}"><img src="/static/img/logo/logo.png" height="40"
+                                                                   alt="logo name"/></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/NAV-BAR -->
+    </header>
+</section>
+<section id="login" class="visible">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-box-plain">
+                    <div>
+                        <h2 class="bigintro">登 录</h2>
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <ul>
+                            {% for message in messages %}
+                            <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        {% endwith %}
+                        <div class="divide-40"></div>
+                        <form id="LoginForm" action="{{ url_for('auth.login') }}" method="post">
+                            {{ form.csrf_token }}
+                            <div class="form-group">
+                                {{ form.email.label(class='col-form-label', for='email') }}
+                                <i class="fa fa-envelope"></i>
+                                {{ form.email(class='form-control', size=20) }}
+                                {% for error in form.email.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </div>
+                            <div class="form-group">
+                                {{ form.password.label(class='col-form-label', for='password') }}
+                                <i class="fa fa-envelope"></i>
+                                {{ form.password(class='form-control', size=20) }}
+                                {% for error in form.password.errors %}
+                                <span style="color: red;">[{{ error }}]</span>
+                                {% endfor %}
+                            </div>
+                            <div class="checkbox" style="display: none">
+                                {{ form.remember_me() }}记住我
+                            </div>
+                            <div class="form-actions">
+                                {{ form.submit() }}
+                                <a href="{{ url_for('auth.reset_password_request') }}">
+                                    <small>忘记密码？</small>
+                                </a>
+                            </div>
+                            <div style="text-align: center">
+                                <a href="{{ url_for('auth.register') }}">注册</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="/static/js/jquery/jquery-2.0.3.min.js"></script>
+<!-- JQUERY UI-->
+<script type="text/javascript" src="/static/js/jquery-ui/jquery-ui-1.10.3.custom.min.js"></script>
+<!-- BOOTSTRAP -->
+<script type="text/javascript" src="/static/js/bootstrap/bootstrap.min.js"></script>
+<!-- UNIFORM -->
+<script type="text/javascript" src="/static/js/uniform/jquery.uniform.min.js"></script>
+<!-- CUSTOM SCRIPT -->
+<script type="text/javascript">
+    function swapScreen(id) {
+        jQuery('.visible').removeClass('visible animated fadeInUp');
+        jQuery('#' + id).addClass('visible animated fadeInUp');
+    }
+</script>
+</body>
+</html>

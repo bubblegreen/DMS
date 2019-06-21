@@ -1,0 +1,44 @@
+2019-06-21 09:45:10,082 ERROR: Exception on /image/ [GET] [in /Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py:1780]
+Traceback (most recent call last):
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 2311, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1834, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1737, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/_compat.py", line 36, in reraise
+    raise value
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1832, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask/app.py", line 1818, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask_login/utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "/Users/aisino/Projects/DockerManager/app/image/routes.py", line 14, in index
+    form = ImagePullForm()
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/wtforms/form.py", line 212, in __call__
+    return type.__call__(cls, *args, **kwargs)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/flask_wtf/form.py", line 88, in __init__
+    super(FlaskForm, self).__init__(formdata=formdata, **kwargs)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/wtforms/form.py", line 272, in __init__
+    super(Form, self).__init__(self._unbound_fields, meta=meta_obj, prefix=prefix)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/wtforms/form.py", line 52, in __init__
+    field = meta.bind_field(self, unbound_field, options)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/wtforms/meta.py", line 27, in bind_field
+    return unbound_field.bind(form=form, **options)
+  File "/Users/aisino/Projects/DockerManager/venv/lib/python3.7/site-packages/wtforms/fields/core.py", line 353, in bind
+    return self.field_class(*self.args, **kw)
+TypeError: __init__() got an unexpected keyword argument 'placeholder'
+2019-06-21 09:45:46,444 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:48:34,752 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:49:06,715 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:49:26,731 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:49:42,531 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:50:21,096 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:50:43,259 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:51:03,620 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 09:51:18,450 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 12:15:24,538 INFO: Aisino Docker Manager startup [in /Users/aisino/Projects/DockerManager/app/__init__.py:79]
+2019-06-21 12:15:27,497 INFO: request login [in /Users/aisino/Projects/DockerManager/app/auth/routes.py:15]
+2019-06-21 12:15:32,407 INFO: request login [in /Users/aisino/Projects/DockerManager/app/auth/routes.py:15]
+2019-06-21 12:15:32,934 INFO: User: xuhang was login [in /Users/aisino/Projects/DockerManager/app/auth/routes.py:28]

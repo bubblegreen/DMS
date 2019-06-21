@@ -1,0 +1,123 @@
+<div class="container">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <!-- PAGE HEADER-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <!-- BREADCRUMBS -->
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="#">Users</a>
+                            </li>
+                        </ul>
+                        <!-- /BREADCRUMBS -->
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+            <!--row-->
+            <div id="main">
+                <menu>
+                    <button id="remove" class="btn btn-danger" onclick="dm.removeEntity('user')" disabled><i
+                            class="fa fa-trash-o"></i>
+                        激活/禁用
+                    </button>
+                    <button id="add" class="btn btn-primary" onclick="dm.show_edit_view('user', 'new')"
+                            style="display: none"><i class="fa fa-plus"></i> 添加用户
+                    </button>
+                </menu>
+                <div class="row">
+                    <div class="col-md-10">
+                        <!-- BOX -->
+                        <div class="box border primary">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Users</h4>
+                            </div>
+                            <div class="box-body big">
+                                <table id="table" class="table select">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center"><input type="checkbox" name="selectAll"
+                                                                              id="select-all"></th>
+                                        <th>姓名</th>
+                                        <th>注册时间</th>
+                                        <th>最近访问时间</th>
+                                        <th>角色</th>
+                                        <th>状态</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /BOX -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}";
+        $().ready(function () {
+            let table = $('#table').DataTable({
+                ajax: '/user/db_list',
+                columnDefs: [
+                    {
+                        targets: 0,
+                        data: null,
+                        defaultContent: '',
+                        orderable: false,
+                        searchable: false,
+                        className: 'dt-body-center',
+                        render: function (data, type, full, meta) {
+                            return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
+                        }
+                    },
+                    {
+                        targets: 1,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<a href="javascript:;" onclick="dm.show_edit_view(\'user\', \'update\', \'' + data[0] + '\')">' + data[1]
+                        }
+                    }
+                ],
+                order: [[1, 'asc']]
+            });
+            // Handle click on "Select all" control
+            $('#select-all').on('click', function () {
+                // Get all rows with search applied
+                let rows = table.rows({'search': 'applied'}).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
+                if (row_selected.length === 0) {
+                    $('#remove').attr('disabled', true);
+                } else {
+                    $('#remove').attr('disabled', false);
+                }
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table tbody').on('change', 'input[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    let el = $('#select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
+                if (row_selected.length === 0) {
+                    $('#remove').attr('disabled', true);
+                } else {
+                    $('#remove').attr('disabled', false);
+                }
+            });
+        });
+    </script>
+</div>
