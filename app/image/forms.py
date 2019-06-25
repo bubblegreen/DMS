@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField
-from wtforms.validators import ValidationError, DataRequired
-from app.models import Group
-from flask import current_app
-import tempfile
+from wtforms import StringField, SelectField, SelectMultipleField, RadioField, TextAreaField, FileField
+from wtforms.validators import ValidationError, DataRequired, regexp, optional
+import re
+from app.utils.docker import docker_client
+from flask import session
+from app.models import Endpoint
 
 
 class ImagePullForm(FlaskForm):
@@ -23,4 +24,24 @@ class ImagePullForm(FlaskForm):
 
 class ImageBuildForm(FlaskForm):
     name = StringField('Image', validators=[DataRequired()])
-    # TODO
+    access = SelectField('权限范围', choices=[(1, '不可见'), (2, '组内'), (3, '公开')], coerce=int)
+    groups = SelectMultipleField('组', coerce=int)
+    method = RadioField('Build方法', choices=[('editor', '在线编辑'), ('upload', '上传文件'), ('url', 'Git URL')], default='editor')
+    base_image = SelectField('FROM')
+    code = TextAreaField('Dockerfile')
+    file = FileField('上传文件')
+    url = StringField('Git')
+
+    def validate_name(self, name):
+        if not re.match('(\w+:\d{1,5}/\w+/\w+:\w+)|(\w+/\w+:\w+)|(\w+:\w+)$', name.data):
+            raise ValidationError('名称格式输入有误!')
+        endpoint = Endpoint.query.get(session.get('endpoint_id'))
+        images = docker_client(endpoint.url).images.list()
+        for image in images:
+            if name.data in image.tags:
+                raise ValidationError('镜像名称重复!')
+
+    def validate_code(self, code):
+        for line in code.data.split('\n'):
+            if line.lower().strip().startswith('from'):
+                raise ValidationError('不需要写入FROM, 请在下拉列表中选择基础镜像！')

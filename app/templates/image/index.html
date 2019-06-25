@@ -52,7 +52,7 @@
                                         删除镜像
                                     </button>
                                     <button id="add" class="btn btn-primary"
-                                            onclick="dm.show_edit_view('image', 'new')"><i
+                                            onclick="dm.show_edit_view('image', 'build')"><i
                                             class="fa fa-plus"></i> 创建镜像
                                     </button>
                                     {% endif %}
@@ -104,7 +104,7 @@
                         searchable: false,
                         render: function (data, type, full, meta) {
                             let content = data[0].substring(0, 37) + '...';
-                            return '<a href="javascript:;" onclick="dm.show_detail_view(\'image\', \'update\', \'' + data[0] + '\')" title="' + data[0] + '">' + content;
+                            return '<a href="javascript:;" onclick="image.show_detail_view(\'' + data[0] + '\')" title="' + data[0] + '">' + content;
                         }
                     },
                     {

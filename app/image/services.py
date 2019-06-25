@@ -1,10 +1,17 @@
-from docker.errors import DockerException, APIError
+from docker.errors import DockerException, APIError, BuildError
 from app.models import Image, Group, Endpoint, Access, User, Role, Registry
 from flask_login import current_user
 from app.utils.docker import docker_client
 from sqlalchemy import or_, and_
 from app import db
-from flask import current_app
+from flask import current_app, request
+import tempfile
+import os
+import shutil
+from werkzeug.utils import secure_filename
+import tarfile
+from git import Repo
+from git.exc import GitCommandError
 
 
 def get_images(endpoint_id):
@@ -52,8 +59,8 @@ def merge_image_info(images_in_docker, images_in_db_dict, images_exclude_ids=(),
             continue
         if image.attrs['Id'] in list(images_in_db_dict.keys()):
             image.is_in_db = True
-            image.creator = images_in_db_dict[image['id']].creator.username
-            image.action = images_in_db_dict[image['id']].creator_id == current_user.id
+            image.creator = images_in_db_dict[image.attrs['Id']].creator.username
+            image.action = images_in_db_dict[image.attrs['Id']].creator_id == current_user.id
         else:
             image.is_in_db = False
             image.creator = ''
@@ -141,8 +148,134 @@ def remove_images(endpoint_id, image_hashs):
             continue
         image_in_db = images_in_db.get(image_hash, None)
         if image_in_db:
-            db.session.remove(image_in_db)
+            db.session.delete(image_in_db)
     db.session.commit()
     if 0 < len(fail_list):
         return fail_list
     return True
+
+
+def build_image(endpoint_id, form):
+    current_app.logger.info('enter build image service')
+    endpoint = Endpoint.query.get(endpoint_id)
+    tag = form.name.data
+    groups = Group.query.filter(Group.id.in_(form.groups.data)).all()
+    access_id = form.access.data
+    method = form.method.data
+    image_db = Image()
+    image_db.groups = groups
+    image_db.access_id = access_id
+    image_db.creator_id = current_user.id
+    if method == 'editor':
+        if form.code.data == '':
+            form.code.errors.append('Dockerfile内容不能为空!')
+            return form
+        else:
+            d = None
+            try:
+                d = tempfile.mkdtemp(dir=current_app.config['UPLOAD_FOLDER'])
+                with open(os.path.join(d, 'Dockerfile'), 'w') as f:
+                    content = 'FROM %s\n%s' % (form.base_image.data, form.code.data)
+                    current_app.logger.info(content)
+                    f.write(content)
+                client = docker_client(endpoint.url)
+                labels = {'Author': current_user.email}
+                image, logs = client.images.build(path=d, tag=tag, labels=labels)
+                image_db.image_hash = image.attrs['Id']
+                db.session.add(image_db)
+                db.session.commit()
+                return image
+            except (DockerException, BuildError, APIError, PermissionError) as ex:
+                current_app.logger.error(ex)
+                form.code.errors.append(ex)
+                return form
+            finally:
+                if d:
+                    shutil.rmtree(d)
+    elif method == 'upload':
+        if form.file.data == '':
+            form.file.errors.append('请上传tar文件!')
+            return form
+        else:
+            d = None
+            file = request.files[form.file.name]
+            current_app.logger.info(file.filename)
+            filename = secure_filename(file.filename)
+            try:
+                d = tempfile.mkdtemp(dir=current_app.config['UPLOAD_FOLDER'])
+                filepath = os.path.join(d, filename)
+                file.save(filepath)
+                if not tarfile.is_tarfile(filepath):
+                    form.file.errors.append('请上传tar格式文件!')
+                    return form
+                with tarfile.open(filepath, 'r') as tar:
+                    extra_path = os.path.join(d, filename[:filename.rindex('.')])
+                    tar.extractall(extra_path)
+                if os.path.exists(os.path.join(extra_path, 'Dockerfile')):
+                    dockerfile = os.path.join(extra_path, 'Dockerfile')
+                else:
+                    form.file.errors.append('tar根目录中必须包含Dockerfile文件!')
+                    return form
+                # todo validate 'FROM' statement of dockerfile
+                if not validate_dockerfile(dockerfile, endpoint_id):
+                    form.file.errors.append('Dockerfile中，只能引入已有的镜像!')
+                    return form
+                client = docker_client(endpoint.url)
+                labels = {'Author': current_user.email}
+                image, logs = client.images.build(path=extra_path, tag=tag, labels=labels)
+                image_db.image_hash = image.attrs['Id']
+                db.session.add(image_db)
+                db.session.commit()
+                return image
+            except (DockerException, BuildError, APIError, PermissionError) as ex:
+                current_app.logger.error(ex)
+                form.file.errors.append(ex)
+                return form
+            finally:
+                if d:
+                    shutil.rmtree(d)
+    else:
+        if form.url.data == '':
+            form.url.errors.append('请输入Git URL地址!')
+        else:
+            git_url = form.url.data
+            d = None
+            try:
+                d = tempfile.mkdtemp(dir=current_app.config['UPLOAD_FOLDER'])
+                Repo.clone_from(git_url, d)
+                if os.path.exists(os.path.join(d, 'Dockerfile')):
+                    dockerfile = os.path.join(d, 'Dockerfile')
+                else:
+                    form.url.errors.append('Dockerfile文件必须在项目根目录中')
+                    return form
+                # todo validate 'FROM' statement of dockerfile
+                if not validate_dockerfile(dockerfile, endpoint_id):
+                    form.url.errors.append('Dockerfile中，只能引入已有的镜像!')
+                    return form
+                client = docker_client(endpoint.url)
+                labels = {'Author': current_user.email}
+                image, logs = client.images.build(path=d, tag=tag, labels=labels)
+                image_db.image_hash = image.attrs['Id']
+                db.session.add(image_db)
+                db.session.commit()
+                return image
+            except (DockerException, BuildError, APIError, PermissionError, GitCommandError) as ex:
+                current_app.logger.error(ex)
+                form.url.errors.append(ex)
+                return form
+            finally:
+                if d:
+                    shutil.rmtree(d)
+
+
+def validate_dockerfile(dockerfile, endpoint_id):
+    with open(dockerfile, 'r') as f:
+        for line in f.readlines():
+            if 'form' in line.lower():
+                statement = line.strip()
+                base_image_name = statement[4:].strip()
+                images = get_images(endpoint_id)
+                for image in images:
+                    if base_image_name in image.tags:
+                        return True
+    return False

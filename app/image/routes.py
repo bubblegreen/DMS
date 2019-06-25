@@ -2,8 +2,9 @@ from flask_login import login_required, current_user
 from app.image import bp
 from flask import render_template, jsonify, request, current_app, session
 from app.image import services
-from app.image.forms import ImagePullForm
+from app.image.forms import ImagePullForm, ImageBuildForm
 from app.registry.services import get_registries
+from app.group.services import get_all_groups
 
 
 @bp.route('/')
@@ -65,8 +66,20 @@ def remove_images():
         return jsonify([])
 
 
-@bp.route('/new', methods= ['GET', 'POST'])
+@bp.route('/build', methods=['GET', 'POST'])
 @login_required
 def create_image():
-    # todo
-    pass
+    endpoint_id = session.get('endpoint_id')
+    form = ImageBuildForm()
+    form.groups.choices = list((g.id, g.name) for g in get_all_groups())
+    tags = []
+    for image in services.get_images(endpoint_id):
+        tags.extend(image.tags)
+    form.base_image.choices = list((t, t) for t in tags)
+    if form.validate_on_submit():
+        rs = services.build_image(endpoint_id, form)
+        if isinstance(rs, ImageBuildForm):
+            return render_template('image/build.html', form=form, action='Build')
+        return 'ok'
+    current_app.logger.info(form.errors)
+    return render_template('image/build.html', form=form, action='Build')

@@ -91,3 +91,7 @@ image.remove = function () {
         }
     });
 };
+
+image.show_detail_view = function (image_hash) {
+    // todo
+};

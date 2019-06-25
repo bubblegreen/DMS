@@ -19,3 +19,4 @@ class Config(object):
     # MAIL_USERNAME = 'xu.wu@txcro.com'
     # MAIL_PASSWORD = 'Qw!@#123'
     ADMINS = ['xuhang@aisino.com']
+    UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'temp_folder')
