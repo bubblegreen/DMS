@@ -36,6 +36,18 @@ def get_images():
     return jsonify(images)
 
 
+@bp.route('/detail/<image_hash>', methods=['GET'])
+@login_required
+def get_image_detail(image_hash):
+    endpoint_id = session.get('endpoint_id', '')
+    image = services.get_image_by_id(endpoint_id, image_hash)
+    tag_list = render_template('image/tag_list.html', image=image)
+    form = ImagePullForm()
+    form.registry.choices = list((r.id, r.name) for r in get_registries())
+    tag = render_template('image/tag.html', form=form)
+    return render_template('image/detail.html', image=image, tag_list=tag_list, tag=tag)
+
+
 @bp.route('/pull', methods=['POST'])
 @login_required
 def pull_image():
@@ -83,3 +95,28 @@ def create_image():
         return 'ok'
     current_app.logger.info(form.errors)
     return render_template('image/build.html', form=form, action='Build')
+
+
+@bp.route('/tag/<image_hash>', methods=['POST'])
+@login_required
+def tag_image(image_hash):
+    endpoint_id = session.get('endpoint_id')
+    form = ImagePullForm()
+    form.registry.choices = list((r.id, r.name) for r in get_registries())
+    if form.validate_on_submit():
+        image = services.tag_image(endpoint_id, image_hash, form)
+        if not isinstance(image, str):
+            current_app.logger.info('return ok')
+            return jsonify('ok')
+        else:
+            return image
+    current_app.logger.info(form.errors)
+    return form.errors
+
+
+@bp.route('/tag_list/<image_hash>')
+@login_required
+def get_image_tag_list(image_hash):
+    endpoint_id = session.get('endpoint_id')
+    image = services.get_image_by_id(endpoint_id, image_hash)
+    return render_template('image/tag_list.html', image=image)

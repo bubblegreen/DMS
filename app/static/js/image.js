@@ -93,5 +93,54 @@ image.remove = function () {
 };
 
 image.show_detail_view = function (image_hash) {
-    // todo
+    let url = '/image/detail/' + image_hash;
+    let container = $("#main-content");
+    container.empty();
+    container.load(url);
+};
+
+image.refreshTagList = function () {
+    let url = '/image/tag_list/' + id;
+    let tag_list = $('#tag-list');
+    tag_list.empty();
+    tag_list.load(url);
+};
+
+image.tag = function (event) {
+    event.preventDefault();
+    let btn = $('#tagImage');
+    btn.button('loading');
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken)
+            }
+        }
+    });
+    $.ajax({
+        url: '/image/tag/' + id,
+        type: 'post',
+        data: $('form').serialize(),
+        dataType: 'json',
+        processData: false,
+        success: function (result) {
+            let msg = $('#msg');
+            if ('ok' === result) {
+                image.refreshTagList();
+                $('#name').val('');
+            } else {
+                let message = result.msg;
+                msg.text(message);
+                msg.show();
+                setTimeout(function () {
+                    msg.hide();
+                }, 3000);
+            }
+            btn.button('reset');
+        },
+        error: function (data) {
+            console.log(data);
+            btn.button('reset');
+        }
+    });
 };

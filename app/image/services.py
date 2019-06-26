@@ -89,7 +89,7 @@ def pull_image(endpoint_id, form):
     name = form.name.data
     url = Registry.query.get(form.registry.data).url
     repo, tag = handle_image_pull_name(name)
-    repo = '%s/%s' % (url, repo)
+    repo = ('%s/%s' % (url, repo)) if url != '' else repo.replace('library/', '')
     try:
         client = docker_client(endpoint.url)
         current_app.logger.info('Start to pull image: %s:%s, user: %s' % (repo, tag, current_user.username))
@@ -117,10 +117,10 @@ def save_pulled_image_to_db(image):
     else:
         image_db.access = Access.query.filter(Access.name == 'group')
     try:
-        db.session.ad(image_db)
+        db.session.add(image_db)
         db.session.commit()
         return image_db
-    except Endpoint as ex:
+    except Exception as ex:
         db.session.rollback()
         current_app.logger.error(
             'save pulled image: <%s> to db fail, error: %s, user: %s' % (image.attrs['Id'], ex, current_user.username))
@@ -279,3 +279,50 @@ def validate_dockerfile(dockerfile, endpoint_id):
                     if base_image_name in image.tags:
                         return True
     return False
+
+
+def get_image_by_id(endpoint_id, image_hash):
+    endpoint = Endpoint.query.get(endpoint_id)
+    try:
+        client = docker_client(endpoint.url)
+        image = client.images.get(image_hash)
+        size = '%.1f' % (image.attrs['Size'] / 1000 / 1000)
+        if len(size[:size.index('.')]) <= 3:
+            size = size.replace('.0', '') + 'MB'
+        else:
+            size = '%.1f' % (image.attrs['Size'] / 1000 / 1000 / 1000)
+            size = size.replace('.0', '') + 'GB'
+        image.attrs['Size'] = size
+        create = image.attrs['Created']
+        create = create[:create.index('.')].replace('T', ' ')
+        image.attrs['Created'] = create
+        return image
+    except (DockerException, APIError) as ex:
+        current_app.logger.error(ex)
+
+
+def tag_image(endpoint_id, image_hash, form):
+    endpoint = Endpoint.query.get(endpoint_id)
+    try:
+        client = docker_client(endpoint.url)
+        image = client.images.get(image_hash)
+        name = form.name.data
+        url = Registry.query.get(form.registry.data).url
+        repo, tag = handle_image_pull_name(name)
+        repo = ('%s/%s' % (url, repo)) if url != '' else repo.replace('library/', '')
+        image.tag(repo, tag)
+        return image
+    except (DockerException, APIError) as ex:
+        current_app.logger.error(ex)
+        return ex
+
+
+def get_image_tag_list(endpoint_id, image_hash):
+    endpoint = Endpoint.query.get(endpoint_id)
+    try:
+        client = docker_client(endpoint.url)
+        image = client.images.get(image_hash)
+        return image.tags
+    except (DockerException, APIError) as ex:
+        current_app.logger.error(ex)
+        return []

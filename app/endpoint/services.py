@@ -4,6 +4,7 @@ from flask import current_app
 from app.utils.docker import docker_client
 from app import db
 from flask_login import current_user
+from multiprocessing.pool import Pool
 
 
 def check_endpoint_available(endpoint):
@@ -19,15 +20,25 @@ def check_endpoint_available(endpoint):
 def get_all_endpoint_infos():
     endpoints = []
     endpoint_list = get_all_endpoint_from_db()
-    for endpoint in endpoint_list:
-        endpoint_info_dict = get_endpoint_info(endpoint)
-        endpoint_info_dict['db'] = endpoint
-        endpoints.append(endpoint_info_dict)
+    # for endpoint in endpoint_list:
+    #     endpoint_info_dict = get_endpoint_info(endpoint)
+    #     endpoint_info_dict['db'] = endpoint
+    #     endpoints.append(endpoint_info_dict)
+    results = []
+    with Pool(processes=4) as pool:
+        for endpoint in endpoint_list:
+            result = pool.apply_async(get_endpoint_info, (endpoint, ))
+            results.append(result)
+        pool.close()
+        pool.join()
+    for result in results:
+        endpoints.append(result.get())
     return endpoints
 
 
 def get_endpoint_info(endpoint):
     endpoint_info_dict = dict()
+    endpoint_info_dict['db'] = endpoint
     try:
         client = docker_client(endpoint.url)
         info = client.info()

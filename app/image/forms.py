@@ -12,14 +12,16 @@ class ImagePullForm(FlaskForm):
     registry = SelectField('Registry', default=1, coerce=int)
 
     def validate_name(self, name):
-        repo_name = name.data.split('/')
-        tag_name = name.data.split(':')
-        if len(tag_name) > 2 \
-                or len(repo_name) > 2 \
-                or repo_name[0] == '' \
-                or tag_name[-1] == '' \
-                or '/' in tag_name[-1]:
-            raise ValidationError('镜像名输入有误，请重新输入！')
+        if not re.match('(\w+/\w+:\w+)|(\w+:[\w.]+)$', name.data):
+            raise ValidationError('镜像名格式输入有误!')
+        # repo_name = name.data.split('/')
+        # tag_name = name.data.split(':')
+        # if len(tag_name) > 2 \
+        #         or len(repo_name) > 2 \
+        #         or repo_name[0] == '' \
+        #         or tag_name[-1] == '' \
+        #         or '/' in tag_name[-1]:
+        #     raise ValidationError('镜像名输入有误，请重新输入！')
 
 
 class ImageBuildForm(FlaskForm):
@@ -33,7 +35,7 @@ class ImageBuildForm(FlaskForm):
     url = StringField('Git')
 
     def validate_name(self, name):
-        if not re.match('(\w+:\d{1,5}/\w+/\w+:\w+)|(\w+/\w+:\w+)|(\w+:\w+)$', name.data):
+        if not re.match('(\w+:\d{1,5}/\w+/\w+:\w+)|(\w+/\w+:\w+)|(\w+:[\w.]+)$', name.data):
             raise ValidationError('名称格式输入有误!')
         endpoint = Endpoint.query.get(session.get('endpoint_id'))
         images = docker_client(endpoint.url).images.list()

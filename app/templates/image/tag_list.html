@@ -1,0 +1,21 @@
+<div class="box border">
+    <div class="box-title">
+        <h4><i class="fa fa-bars"></i>Image tags</h4>
+    </div>
+    <div class="box-body">
+        <ul class="list-inline">
+            {% for tag in image.tags %}
+            <li>
+                <div class="pull-left" style="display: table">
+                    <div class="input-group">
+                        <span class="input-group-addon">{{ tag }}</span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" type="button"><i class="fa fa-trash-o"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>

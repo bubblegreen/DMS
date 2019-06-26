@@ -4,6 +4,7 @@ from time import time
 from app import db, login
 import jwt
 from flask import current_app
+from sqlalchemy.exc import OperationalError
 
 user2group = db.Table('user2group',
                       db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -130,7 +131,12 @@ class User(db.Model):
 
 @login.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    try:
+        user = User.query.get(int(user_id))
+        return user
+    except OperationalError as ex:
+        current_app.logger.error(ex)
+        return None
 
 
 class Role(db.Model):
