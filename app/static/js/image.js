@@ -144,3 +144,35 @@ image.tag = function (event) {
         }
     });
 };
+
+image.untag = function (event) {
+    event.preventDefault();
+    let btn = $(event.target);
+    let tag = btn.parent().prev().text();
+    let url = '/image/untag';
+    btn.button('loading');
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken)
+            }
+        }
+    });
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: JSON.stringify({"tag": tag}),
+        contentType: "application/json",
+        processData: false,
+        success: function (result) {
+            if (result === 'ok') {
+                image.refreshTagList();
+            }
+            btn.button('reset');
+        },
+        error: function (data) {
+            console.log(data);
+            btn.button('reset');
+        }
+    });
+};

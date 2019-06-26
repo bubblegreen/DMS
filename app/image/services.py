@@ -296,6 +296,11 @@ def get_image_by_id(endpoint_id, image_hash):
         create = image.attrs['Created']
         create = create[:create.index('.')].replace('T', ' ')
         image.attrs['Created'] = create
+        image_db = Image.query.filter(Image.image_hash == image_hash).first()
+        if image_db:
+            image.db = image_db
+        else:
+            image.db = None
         return image
     except (DockerException, APIError) as ex:
         current_app.logger.error(ex)
@@ -326,3 +331,33 @@ def get_image_tag_list(endpoint_id, image_hash):
     except (DockerException, APIError) as ex:
         current_app.logger.error(ex)
         return []
+
+
+def untag_image(endpoint_id, tag):
+    endpoint = Endpoint.query.get(endpoint_id)
+    try:
+        client = docker_client(endpoint.url)
+        client.images.remove(image=tag)
+        return 'ok'
+    except (DockerException, APIError) as ex:
+        current_app.logger.error(ex)
+        return None
+
+
+def update_image(image_hash, form):
+    try:
+        image_in_db = Image.query.filter(Image.image_hash == image_hash).first()
+        groups = Group.query.filter(Group.id.in_(form.groups.data)).all()
+        access_id = form.access.data
+        if not image_in_db:
+            image_in_db = Image()
+            image_in_db.image_hash = image_hash
+            image_in_db.creator_id = current_user.id
+            db.session.add(image_in_db)
+        image_in_db.groups = groups
+        image_in_db.access_id = access_id
+        db.session.commit()
+        return 'ok'
+    except Exception as ex:
+        current_app.logger.error(ex)
+        return ex

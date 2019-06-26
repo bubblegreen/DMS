@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:10.4.5
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: docker
+    ports:
+      - "3306:3306"
+    command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"

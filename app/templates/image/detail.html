@@ -24,12 +24,43 @@
             <div id="main">
                 <div class="row">
                     <div class="col-sm-12" id="tag-list">
-                            {{ tag_list | safe }}
+                        {{ tag_list | safe }}
                     </div>
                 </div>
                 <div class="row" id="tag">
                     <div class="col-sm-12">
                         {{ tag | safe }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box border">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Manage the Image</h4>
+                            </div>
+                            <div class="box-body">
+                                <form id="manage" class="form-horizontal">
+                                    <div class="form-group col-sm-4">
+                                        {{ form.access.label(for='access', class='control-label col-sm-3') }}
+                                        <div class="col-sm-9">
+                                            {{ form.access(class='form-control') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        {{ form.groups.label(class='contol-label col-sm-2', for='groups', style='text-align: right') }}
+                                        <div class="col-sm-10">
+                                            {{ form.groups(class='select-multiple') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-success" onclick="update(event)"
+                                                data-loading-text="Updating...">更新
+                                        </button>
+                                    </div>
+                                </form>
+                                <div class="alert alert-block fade in" style="display: none"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -71,19 +102,19 @@
                                             Build
                                         </th>
                                         <td>
-                                            Docker {{ image.attrs['DockerVersion'] }} on {{ image.attrs['Os'] }}, {{
-                                            image.attrs['Architecture'] }}
+                                            Docker {{ image.attrs['DockerVersion'] }}
+                                            on {{ image.attrs['Os'] }}, {{ image.attrs['Architecture'] }}
                                         </td>
                                     </tr>
                                     {% if image.attrs['Author'] %}
-                                    <tr>
-                                        <th>
-                                            Author
-                                        </th>
-                                        <td>
-                                            {{ image.attrs['Author'] }}
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>
+                                                Author
+                                            </th>
+                                            <td>
+                                                {{ image.attrs['Author'] }}
+                                            </td>
+                                        </tr>
                                     {% endif %}
                                     </tbody>
                                 </table>
@@ -101,56 +132,57 @@
                             <div class="box-body">
                                 <table class="table">
                                     {% if image.attrs['Config'].get('Cmd', None) %}
-                                    <tr>
-                                        <th>CMD</th>
-                                        <td><span
-                                                class="label label-success">{{ image.attrs['Config']['Cmd'][-1] }}</span>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>CMD</th>
+                                            <td><span
+                                                    class="label label-success">{{ ' '.join(image.attrs['Config']['Cmd']) }}</span>
+                                            </td>
+                                        </tr>
                                     {% endif %}
                                     {% if image.attrs['Config'].get('Entrypoint', None) %}
-                                    <tr>
-                                        <th>ENTRYPOINT</th>
-                                        <td><span class="label label-success">{{ image.attrs['Config']['Entrypoint'][-1] }}</span>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>ENTRYPOINT</th>
+                                            <td><span
+                                                    class="label label-success">{{ image.attrs['Config']['Entrypoint'][-1] }}</span>
+                                            </td>
+                                        </tr>
                                     {% endif %}
                                     {% if image.attrs['Config'].get('Expose', None) %}
-                                    <tr>
-                                        <th>EXPOSE</th>
-                                        <td>
-                                            {%for port in image.attrs['Config']['Expose'] %}
-                                            <span class="label label-default">port</span>
-                                            {% endfor %}
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>EXPOSE</th>
+                                            <td>
+                                                {% for port in image.attrs['Config']['Expose'] %}
+                                                    <span class="label label-default">port</span>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
                                     {% endif %}
                                     {% if image.attrs['Config'].get('Volume', None) %}
-                                    <tr>
-                                        <th>VOLUME</th>
-                                        <td>
-                                            {%for volume in image.attrs['Config']['Volume'] %}
-                                            <span class="label label-default">volume</span>
-                                            {% endfor %}
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>VOLUME</th>
+                                            <td>
+                                                {% for volume in image.attrs['Config']['Volume'] %}
+                                                    <span class="label label-default">volume</span>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
                                     {% endif %}
                                     {% if image.attrs['Config'].get('Env', None) %}
-                                    <tr>
-                                        <th>ENV</th>
-                                        <td>
-                                            <table class="table table-bordered">
-                                                <tbody>
-                                                {% for row in image.attrs['Config']['Env'] %}
-                                                <tr>
-                                                    <td>{{ row[:row.index('=')] }}</td>
-                                                    <td>{{ row[row.index('=') + 1:] }}</td>
-                                                </tr>
-                                                {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
+                                        <tr>
+                                            <th>ENV</th>
+                                            <td>
+                                                <table class="table table-bordered">
+                                                    <tbody>
+                                                    {% for row in image.attrs['Config']['Env'] %}
+                                                        <tr>
+                                                            <td>{{ row[:row.index('=')] }}</td>
+                                                            <td>{{ row[row.index('=') + 1:] }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     {% endif %}
                                 </table>
                             </div>
@@ -173,6 +205,9 @@
                 //closeOnSelect: false,
                 width: '100%'
             });
+            $('button[name="untag"]').each(function () {
+                $(this).on('click', image.untag);
+            })
         });
 
         function update(event) {
@@ -185,18 +220,23 @@
                 }
             });
             $.ajax({
-                url: '/group/update/' + id,
+                url: '/image/update/' + id,
                 type: 'post',
-                data: $('form').serialize(),
+                data: $('#manage').serialize(),
                 processData: false,  // 不处理数据
                 // contentType: false,
-                success: function (result) {
-                    if (result === 'ok') {
-                        let viewUrl = '/group';
-                        dm.showIndexView(viewUrl);
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg === 'ok') {
+                        alert.removeClass('alert-danger').addClass('alert-success').append($('<h4>Update Success!</h4>'));
                     } else {
-                        dm.loadView(result);
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
                     }
+                    alert.show();
+                    setTimeout(function () {
+                        alert.hide();
+                        alert.empty();
+                    }, 3000);
                 },
                 error: function () {
                     console.log('error');

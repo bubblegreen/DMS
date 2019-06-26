@@ -47,3 +47,8 @@ class ImageBuildForm(FlaskForm):
         for line in code.data.split('\n'):
             if line.lower().strip().startswith('from'):
                 raise ValidationError('不需要写入FROM, 请在下拉列表中选择基础镜像！')
+
+
+class ImageManageForm(FlaskForm):
+    access = SelectField('权限范围', choices=[(1, '不可见'), (2, '组内'), (3, '公开')], coerce=int)
+    groups = SelectMultipleField('组', coerce=int)
