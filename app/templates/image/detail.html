@@ -205,9 +205,10 @@
                 //closeOnSelect: false,
                 width: '100%'
             });
-            $('button[name="untag"]').each(function () {
-                $(this).on('click', image.untag);
-            })
+            $('#tag-list').on('click', 'button.btn', image.untag);
+            // $('button[name="untag"]').each(function () {
+            //     $(this).on('click', image.untag);
+            // })
         });
 
         function update(event) {

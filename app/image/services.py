@@ -337,6 +337,7 @@ def untag_image(endpoint_id, tag):
     endpoint = Endpoint.query.get(endpoint_id)
     try:
         client = docker_client(endpoint.url)
+        current_app.logger.info(tag)
         client.images.remove(image=tag)
         return 'ok'
     except (DockerException, APIError) as ex:

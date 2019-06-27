@@ -131,6 +131,7 @@ def get_image_tag_list(image_hash):
 @login_required
 def untag_image():
     tag = request.json.get('tag')
+    current_app.logger.info('enter untag:%s' % tag)
     endpoint_id = session.get('endpoint_id')
     result = services.untag_image(endpoint_id, tag)
     if result:

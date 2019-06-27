@@ -147,7 +147,7 @@ image.tag = function (event) {
 
 image.untag = function (event) {
     event.preventDefault();
-    let btn = $(event.target);
+    let btn = $(event.currentTarget);
     let tag = btn.parent().prev().text();
     let url = '/image/untag';
     btn.button('loading');

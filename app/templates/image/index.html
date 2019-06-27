@@ -58,7 +58,7 @@
                                     {% endif %}
                                 </menu>
                                 <span id="del-msg" style="display: none"></span>
-                                <table id="table" class="table select">
+                                <table id="table" class="table select" style="table-layout: fixed;word-break: break-all">
                                     <thead>
                                     <tr>
                                         <th style="text-align: center"><input type="checkbox" name="selectAll"
@@ -69,6 +69,7 @@
                                         <th>创建时间</th>
                                     </tr>
                                     </thead>
+                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
@@ -87,6 +88,7 @@
                         targets: 0,
                         data: null,
                         defaultContent: '',
+                        width: "30px",
                         orderable: false,
                         searchable: false,
                         className: 'dt-body-center',
@@ -102,6 +104,7 @@
                         targets: 1,
                         data: null,
                         searchable: false,
+                        width: "380px",
                         render: function (data, type, full, meta) {
                             let content = data[0].substring(0, 37) + '...';
                             return '<a href="javascript:;" onclick="image.show_detail_view(\'' + data[0] + '\')" title="' + data[0] + '">' + content;
@@ -112,17 +115,18 @@
                         data: null,
                         orderable: false,
                         render: function (data, type, full, meta) {
-                            let html = '';
+                            let html = '<div class="row" style="overflow-x: auto;overflow-y:hidden">';
                             for (let tag in data[1]) {
-                                html = html + ('<span class="label label-primary">' + data[1][tag] + '</span>&nbsp;');
+                                html = html + ('<span class="label label-primary" style="margin-right:5px">' + data[1][tag] + '</span>');
                             }
-                            return html;
+                            return html + '</div>';
                         }
                     },
                     {
                         targets: 3,
                         data: null,
                         searchable: false,
+                        width: "80px",
                         render: function (data, type, full, meta) {
                             return '<span>' + data[2] + '</span>';
                         }
@@ -131,6 +135,7 @@
                         targets: 4,
                         data: null,
                         searchable: false,
+                        width: "200px",
                         render: function (data, type, full, meta) {
                             return '<span>' + data[3] + '</span>';
                         }
