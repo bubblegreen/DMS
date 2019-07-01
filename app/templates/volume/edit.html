@@ -1,0 +1,215 @@
+<div class="container">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <!-- PAGE HEADER-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <!-- BREADCRUMBS -->
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="#">Volumes</a>
+                            </li>
+                            <li>
+                                {{ action }}
+                            </li>
+                        </ul>
+                        <!-- /BREADCRUMBS -->
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+            <!--row-->
+            <div id="main">
+                <div class="row">
+                    <div class="col-md-10">
+                        <!-- BOX -->
+                        <div class="box border primary">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>{{ action }}</h4>
+                            </div>
+                            <div class="box-body big">
+                                <form id="volume" name="volume" class="form-horizontal">
+
+                                    <div class="form-group">
+                                        {{ form.name.label(for='name', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.name(class='form-control') }}
+                                            {% for error in form.name.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.driver.label(for='driver', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.driver(class='form-control') }}
+                                            {% for error in form.driver.errors %}
+                                            <span style="color: red;">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="label">
+                                        <label class="control-label col-sm-2">Labels</label>
+                                        <div class="col-sm-10">
+                                            <button id="addLabel" class="btn btn-inverse btn-xs" onclick="addLabel(event)"><i
+                                                    class="fa fa-plus-circle"></i> Add Label
+                                            </button>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                {{ form.label_name(class='form-control', placeholder='name') }}
+                                            </div>
+                                            <div class="col-sm-4">
+                                                {{ form.label_value(class='form-control', placeholder='value') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--<div class="form-group">-->
+                                        <!--<div class="row">-->
+                                            <!--<div class="col-sm-2" style="display: block;margin-right: 10px"></div>-->
+                                            <!--<div class="col-sm-4">-->
+                                                <!--{{ form.label_name(class='form-control', placeholder='name') }}-->
+                                            <!--</div>-->
+                                            <!--<div class="col-sm-4">-->
+                                                <!--{{ form.label_value(class='form-control', placeholder='value') }}-->
+                                            <!--</div>-->
+                                            <!--<div class="col-sm-1">-->
+                                            <!--<button class="btn btn-danger" name="rmLabel"><i-->
+                                            <!--class="fa fa-trash-o"></i></button>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
+                                    <div class="form-group">
+                                        {{ form.access.label(for='access', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.access(class='form-control') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.groups.label(for='groups', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.groups(class='select-multiple') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2">
+                                            {% if action == 'New' %}
+                                            <button class="btn btn-success" onclick="save(event)">提交</button>
+                                            {% else %}
+                                            <button class="btn btn-success" onclick="update(event)">提交</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /BOX -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}";
+        var id = "{{ endpoint_id }}";
+        $().ready(function () {
+            $('#groups').select2({
+                allowClear: true,
+                formatNoMatches: function () {
+                    return '';
+                },
+                //closeOnSelect: false,
+                width: '100%'
+            });
+            if ("{{ action }}" !== 'New') {
+                $('#input[type=text]').attr('readonly', true);
+                $('#addLabel').hide();
+                $('button[name="rmLabel"]').hide();
+            }
+        });
+
+        function removeLabel(event) {
+            event.preventDefault();
+            $(event.currentTarget).parent().parent().parent().remove();
+        }
+
+        function addLabel(event) {
+            event.preventDefault();
+            $('#label').after($('<div class="form-group">\n' +
+                '                                        <div class="row">\n' +
+                '                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '                                                {{ form.label_name(class="form-control", placeholder="name") }}\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '                                                {{ form.label_value(class="form-control", placeholder="value") }}\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-1">\n' +
+                '                                            <button class="btn btn-danger" name="rmLabel" onclick="removeLabel(event)"><i\n' +
+                '                                            class="fa fa-trash-o"></i></button>\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '                                    </div>'))
+        }
+
+        function save(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            $.ajax({
+                url: '/volume/new',
+                type: 'post',
+                data: $('form').serialize(),
+                processData: false,  // 不处理数据
+                // contentType: false,
+                success: function (result) {
+                    if (result === 'ok') {
+                        let viewUrl = '/volume';
+                        dm.showIndexView(viewUrl);
+                    } else {
+                        dm.loadView(result);
+                    }
+                },
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+
+        function update(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            $.ajax({
+                url: '/endpoint/update/' + id,
+                type: 'post',
+                data: $('form').serialize(),
+                processData: false,  // 不处理数据
+                // contentType: false,
+                success: function (result) {
+                    if (result === 'ok') {
+                        let viewUrl = '/endpoint';
+                        dm.showIndexView(viewUrl);
+                    } else {
+                        dm.loadView(result);
+                    }
+                },
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+    </script>
+</div>

@@ -51,6 +51,12 @@ def create_app(config_class=Config):
     from app.container import bp as container_bp
     app.register_blueprint(container_bp, url_prefix='/container')
 
+    from app.volume import bp as volume_bp
+    app.register_blueprint(volume_bp, url_prefix='/volume')
+
+    from app.network import bp as network_bp
+    app.register_blueprint(network_bp, url_prefix='/network')
+
     # from app.sampleCalculation import bp as sc_bp
     # app.register_blueprint(sc_bp, url_prefix='/sc')
 

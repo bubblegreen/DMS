@@ -171,7 +171,7 @@ class Access(db.Model):
 
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    image_hash = db.Column(db.String(255), nullable=False, unique=True)
+    hash = db.Column(db.String(255), nullable=False, unique=True)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     create_time = db.Column(db.DateTime, default=db.func.now())
     access_id = db.Column(db.Integer, db.ForeignKey('access.id'), nullable=False)
@@ -181,7 +181,7 @@ class Image(db.Model):
 
 class Container(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    container_hash = db.Column(db.String(255), nullable=False)
+    hash = db.Column(db.String(255), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     create_time = db.Column(db.DateTime, default=db.func.now())
     access_id = db.Column(db.Integer, db.ForeignKey('access.id'), nullable=False)
@@ -191,7 +191,7 @@ class Container(db.Model):
 
 class Volume(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    volume_hash = db.Column(db.String(255), nullable=False)
+    hash = db.Column(db.String(255), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     create_time = db.Column(db.DateTime, default=db.func.now())
     access_id = db.Column(db.Integer, db.ForeignKey('access.id'), nullable=False)
@@ -201,7 +201,7 @@ class Volume(db.Model):
 
 class Network(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    network_hash = db.Column(db.String(255), nullable=False)
+    hash = db.Column(db.String(255), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     create_time = db.Column(db.DateTime, default=db.func.now())
     access_id = db.Column(db.Integer, db.ForeignKey('access.id'), nullable=False)

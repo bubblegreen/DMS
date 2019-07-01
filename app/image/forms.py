@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField, SelectMultipleField, RadioField, TextAreaField, FileField
-from wtforms.validators import ValidationError, DataRequired, regexp, optional
+from wtforms.validators import ValidationError, DataRequired
 import re
 from app.utils.docker import docker_client
 from flask import session

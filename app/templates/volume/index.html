@@ -73,14 +73,47 @@
                         searchable: false,
                         className: 'dt-body-center',
                         render: function (data, type, full, meta) {
-                            return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
+                            if (data[4]) {
+                                return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
+                            } else {
+                                return '';
+                            }
                         }
                     },
                     {
                         targets: 1,
                         data: null,
                         render: function (data, type, full, meta) {
-                            return '<a href="javascript:;" onclick="dm.show_edit_view(\'volume\', \'update\', \'' + data[0] + '\')">' + data[1]
+                            if (data[4]) {
+                                return '<a href="javascript:;" onclick="dm.show_edit_view(\'volume\', \'update\', \'' + data[0] + '\')">' + data[0]
+                            } else {
+                                return data[0]
+                            }
+                        }
+                    },
+                    {
+                        targets: 2,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[1] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 3,
+                        data: null,
+                        searchable: false,
+                        width: "80px",
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[2] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 4,
+                        data: null,
+                        searchable: false,
+                        width: "200px",
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[3] + '</span>';
                         }
                     }
                 ],
