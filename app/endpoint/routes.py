@@ -65,5 +65,5 @@ def update_endpoint(endpoint_id):
 @login_required
 def remove_endpoint():
     ids = request.json
-    services.remove_endpoint(ids)
-    return render_template('endpoint/index.html')
+    result = services.remove_endpoint(ids)
+    return jsonify(result)

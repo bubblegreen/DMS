@@ -9,7 +9,7 @@
                         <ul class="breadcrumb">
                             <li>
                                 <i class="fa fa-home"></i>
-                                <a href="#">Images</a>
+                                <a href="#">Networks</a>
                             </li>
                         </ul>
                         <!-- /BREADCRUMBS -->
@@ -19,62 +19,49 @@
             <!-- /PAGE HEADER -->
             <!--row-->
             <div id="main">
-                {% if permission in ['pull', 'create'] %}
+                <menu>
+                    {% if permission == 'create' %}
+                    <button id="remove" class="btn btn-danger" onclick="dm.removeEntity('network')" disabled><i
+                            class="fa fa-trash-o"></i>
+                        删除Network
+                    </button>
+                    <button id="add" class="btn btn-primary" onclick="dm.show_edit_view('network', 'new', null)"><i
+                            class="fa fa-plus"></i> 添加Network
+                    </button>
+                    {% endif %}
+                </menu>
                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="box">
-                            <div class="box-title">
-                                <h4><i class="fa fa-bars"></i>Pull image</h4>
-                            </div>
-                            <div class="box-body">
-                                <div class="col-sm-12">
-                                    <form id="pull-image" name="pull-image" class="form-inline">
-                                        {{ pull_form_content | safe }}
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-                <div class="separator"></div>
-                <div class="row">
-                    <div class="col-sm-12">
+                    <div class="col-md-12">
+                        <!-- BOX -->
                         <div class="box border primary">
                             <div class="box-title">
-                                <h4><i class="fa fa-bars"></i>Images</h4>
+                                <h4><i class="fa fa-bars"></i>Networks</h4>
                             </div>
                             <div class="box-body big">
-                                <menu>
-                                    {% if permission == 'create' %}
-                                    <button id="remove" class="btn btn-danger" onclick="dm.removeEntity('image')" disabled><i
-                                            class="fa fa-trash-o"></i>
-                                        删除镜像
-                                    </button>
-                                    <button id="add" class="btn btn-primary"
-                                            onclick="dm.show_edit_view('image', 'build')"><i
-                                            class="fa fa-plus"></i> 创建镜像
-                                    </button>
-                                    {% endif %}
-                                </menu>
-                                <span id="del-msg" style="display: none"></span>
-                                <table id="table" class="table select" style="table-layout: fixed;word-break: break-all">
+                                <table id="table" class="table select">
                                     <thead>
                                     <tr>
                                         <th style="text-align: center"><input type="checkbox" name="selectAll"
                                                                               id="select-all"></th>
-                                        <th>ID</th>
-                                        <th>Tags</th>
-                                        <th>Size</th>
-                                        <th>创建时间</th>
+                                        <th>名称</th>
+                                        <th>Stack</th>
+                                        <th>Scope</th>
+                                        <th>Driver</th>
+                                        <th>Attachable</th>
+                                        <th>Internal</th>
+                                        <th>IPAM Driver</th>
+                                        <th>IPAM Subnet</th>
+                                        <th>IPAM Gateway</th>
+                                        <th>Created</th>
                                     </tr>
                                     </thead>
-                                    <tbody></tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <!-- /BOX -->
                 </div>
+
             </div>
         </div>
     </div>
@@ -82,18 +69,17 @@
         var csrftoken = "{{ csrf_token() }}";
         $().ready(function () {
             let table = $('#table').DataTable({
-                ajax: '/image/db_list',
+                ajax: '/network/db_list',
                 columnDefs: [
                     {
                         targets: 0,
                         data: null,
                         defaultContent: '',
-                        width: "30px",
                         orderable: false,
                         searchable: false,
                         className: 'dt-body-center',
                         render: function (data, type, full, meta) {
-                            if (data[4]) {
+                            if (data[11]) {
                                 return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
                             } else {
                                 return '';
@@ -103,41 +89,81 @@
                     {
                         targets: 1,
                         data: null,
-                        searchable: false,
-                        width: "380px",
                         render: function (data, type, full, meta) {
-                            let content = data[0].substring(0, 37) + '...';
-                            return '<a href="javascript:;" onclick="image.show_detail_view(\'' + data[0] + '\')" title="' + data[0] + '">' + content;
+                            if (data[11]) {
+                                return '<a href="javascript:;" onclick="dm.show_edit_view(\'network\', \'update\', \'' + data[0] + '\')">' + data[1]
+                            } else {
+                                return data[1]
+                            }
                         }
                     },
                     {
                         targets: 2,
                         data: null,
-                        orderable: false,
-                        render: function (data, type, full, meta) {
-                            let html = '<div class="row" style="overflow-x: auto;overflow-y:hidden">';
-                            for (let tag in data[1]) {
-                                html = html + ('<span class="label label-primary" style="margin-right:5px">' + data[1][tag] + '</span>');
-                            }
-                            return html + '</div>';
-                        }
-                    },
-                    {
-                        targets: 3,
-                        data: null,
-                        searchable: false,
-                        width: "80px",
                         render: function (data, type, full, meta) {
                             return '<span>' + data[2] + '</span>';
                         }
                     },
                     {
-                        targets: 4,
+                        targets: 3,
                         data: null,
-                        searchable: false,
-                        width: "200px",
                         render: function (data, type, full, meta) {
                             return '<span>' + data[3] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 4,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[4] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 5,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[5] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 6,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[6] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 7,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[7] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 8,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[8] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 9,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[9] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 10,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[10] + '</span>';
                         }
                     }
                 ],

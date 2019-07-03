@@ -56,7 +56,7 @@ def remove_group(ids):
         for group in groups:
             group.active = False
         db.session.commit()
-        return 'ok'
+        return []
     except Exception as ex:
         current_app.logger.error(ex)
-        return None
+        return ids

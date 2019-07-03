@@ -36,7 +36,7 @@
                                 <h4><i class="fa fa-bars"></i>Endpoints</h4>
                             </div>
                             <div class="box-body big">
-                                <table id="endpoint_table" class="table select">
+                                <table id="table" class="table select">
                                     <thead>
                                     <tr>
                                         <th style="text-align: center"><input type="checkbox" name="selectAll"
@@ -58,7 +58,7 @@
     <script type="text/javascript">
         var csrftoken = "{{ csrf_token() }}";
         $().ready(function () {
-            let table = $('#endpoint_table').DataTable({
+            let table = $('#table').DataTable({
                 ajax: '/endpoint/db_list',
                 columnDefs: [
                     {
@@ -88,7 +88,7 @@
                 let rows = table.rows({'search': 'applied'}).nodes();
                 // Check/uncheck checkboxes for all rows in the table
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
-                let row_selected = $('#endpoint_table tbody input[type="checkbox"]:checked');
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
                 if (row_selected.length === 0) {
                     $('#remove').attr('disabled', true);
                 } else {
@@ -97,7 +97,7 @@
             });
 
             // Handle click on checkbox to set state of "Select all" control
-            $('#endpoint_table tbody').on('change', 'input[type="checkbox"]', function () {
+            $('#table tbody').on('change', 'input[type="checkbox"]', function () {
                 // If checkbox is not checked
                 if (!this.checked) {
                     let el = $('#select-all').get(0);
@@ -108,7 +108,7 @@
                         el.indeterminate = true;
                     }
                 }
-                let row_selected = $('#endpoint_table tbody input[type="checkbox"]:checked');
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
                 if (row_selected.length === 0) {
                     $('#remove').attr('disabled', true);
                 } else {

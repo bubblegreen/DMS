@@ -96,13 +96,38 @@ dm.removeEntity = function (entityType) {
             }
         }
     });
+    let removeBtn = $('#remove');
+    removeBtn.attr('disabled', true);
     $.ajax({
         url: url,
         type: 'post',
         data: JSON.stringify(ids),
         contentType: 'application/json',
-        success: function (html) {
-            dm.loadView($(html));
+        dataType: 'json',
+        success: function (failList) {
+            $('#table').dataTable().api().ajax.reload(function () {
+                for (let index in failList) {
+                    let hashId = failList[index];
+                    $('input[value="' + hashId + '"]').prop('checked', true);
+                }
+                if ($('input:checked').length > 0) {
+                    removeBtn.attr('disabled', false);
+                }
+            }, false);
+        },
+        error: function () {
+            $('#table').dataTable().api().ajax.reload(function () {
+                for (let index in ids) {
+                    let hashId = ids[index];
+                    let row = $('input[value="' + hashId + '"]');
+                    if (row) {
+                        row.prop('checked', true);
+                    }
+                }
+                if ($('input:checked').length > 0) {
+                    removeBtn.attr('disabled', false);
+                }
+            }, false);
         }
     });
 };

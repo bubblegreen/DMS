@@ -59,5 +59,5 @@ def update_group(group_id):
 @login_required
 def remove_group():
     ids = request.json
-    services.remove_group(ids)
-    return render_template('group/index.html')
+    result = services.remove_group(ids)
+    return jsonify(result)

@@ -1,6 +1,6 @@
 from app.volume import bp
 from flask_login import login_required, current_user
-from flask import render_template, session, jsonify, current_app
+from flask import render_template, session, jsonify, current_app, request
 from app.volume import services
 from app.volume.forms import VolumeCreateForm
 from app.group.services import get_all_groups
@@ -9,14 +9,14 @@ from app.group.services import get_all_groups
 @bp.route('/')
 @login_required
 def index():
-    permission = current_user.permission_info.get('image', None)
+    permission = current_user.permission_info.get('volume', None)
     permission = permission.permission_type if permission else ''
     return render_template('volume/index.html', permission=permission)
 
 
 @bp.route('/db_list')
 @login_required
-def get_images():
+def get_volumes():
     endpoint_id = session.get('endpoint_id', '')
     volumes = {'data': []}
     for volume in services.get_volumes(endpoint_id):
@@ -32,7 +32,7 @@ def get_images():
             mount_point = volume.attrs['Mountpoint']
         create = volume.attrs['CreatedAt']
         create = create[:create.index('+')].replace('T', ' ')
-        volumes['data'].append([entity_id, volume.attrs['Driver'], mount_point, create, volume.action])
+        volumes['data'].append([entity_id, volume.attrs['Driver'], mount_point, create, volume.action, volume.id])
     return jsonify(volumes)
 
 
@@ -51,24 +51,35 @@ def create_volume():
     return render_template('volume/edit.html', form=form, action='New')
 
 
-@bp.route('/update/<volume_hash>', methods=['GET, POST'])
+@bp.route('/update/<volume_hash>', methods=['GET', 'POST'])
 @login_required
 def update_volume(volume_hash):
     endpoint_id = session.get('endpoint_id', '')
     form = VolumeCreateForm()
     form.groups.choices = list((g.id, g.name) for g in get_all_groups())
-    volume = services.get_volume_by_hash(endpoint_id, volume_hash)
-    if volume:
-        form.name.data = volume.id
-        create = volume.attrs['CreatedAt']
-        create = create[:create.index('+')].replace('T', ' ')
-        form.groups.data = [g.id for g in volume.db.groups]
-        form.access.data = volume.db.access_id
-        form.driver.data = volume.attrs['Driver']
-    if form.validate_on_submit():
-        volume = services.create_volume(endpoint_id, form)
+    if form.is_submitted():
+        volume = services.update_volume(form)
         if volume:
             return 'ok'
         else:
             return render_template('volume/edit.html', form=form, action='Update')
+    volume = services.get_volume_by_hash(endpoint_id, volume_hash)
+    if volume:
+        form.name.data = volume.id
+        form.groups.data = [g.id for g in volume.db.groups] if volume.db else []
+        form.access.data = volume.db.access_id if volume.db else 1
+        form.driver.data = volume.attrs['Driver']
+        form.labels.data = volume.attrs['Labels']
     return render_template('volume/edit.html', form=form, action='Update')
+
+
+@bp.route('/remove', methods=['POST'])
+@login_required
+def remove_volume():
+    volume_hashs = request.json
+    endpoint_id = session.get('endpoint_id', '')
+    result = services.remove_volumes(endpoint_id, volume_hashs)
+    if isinstance(result, list):
+        return jsonify(result)
+    else:
+        return jsonify([])

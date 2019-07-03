@@ -125,10 +125,10 @@ def remove_endpoint(ids):
         for endpoint in endpoints:
             db.session.delete(endpoint)
         db.session.commit()
-        return 'ok'
+        return []
     except Exception as ex:
         current_app.logger.error(ex)
-        return None
+        return ids
 
 #
 # def __docker_client(url):

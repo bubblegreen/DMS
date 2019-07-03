@@ -38,7 +38,7 @@
                                 <h4><i class="fa fa-bars"></i>Volumes</h4>
                             </div>
                             <div class="box-body big">
-                                <table id="volume_table" class="table select">
+                                <table id="table" class="table select">
                                     <thead>
                                     <tr>
                                         <th style="text-align: center"><input type="checkbox" name="selectAll"
@@ -62,7 +62,7 @@
     <script type="text/javascript">
         var csrftoken = "{{ csrf_token() }}";
         $().ready(function () {
-            let table = $('#volume_table').DataTable({
+            let table = $('#table').DataTable({
                 ajax: '/volume/db_list',
                 columnDefs: [
                     {
@@ -74,7 +74,7 @@
                         className: 'dt-body-center',
                         render: function (data, type, full, meta) {
                             if (data[4]) {
-                                return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
+                                return '<input type="checkbox" value="' + $("<div/>").text(data[5]).html() + '">';
                             } else {
                                 return '';
                             }
@@ -85,7 +85,7 @@
                         data: null,
                         render: function (data, type, full, meta) {
                             if (data[4]) {
-                                return '<a href="javascript:;" onclick="dm.show_edit_view(\'volume\', \'update\', \'' + data[0] + '\')">' + data[0]
+                                return '<a href="javascript:;" onclick="dm.show_edit_view(\'volume\', \'update\', \'' + data[5] + '\')">' + data[0]
                             } else {
                                 return data[0]
                             }
@@ -125,7 +125,7 @@
                 let rows = table.rows({'search': 'applied'}).nodes();
                 // Check/uncheck checkboxes for all rows in the table
                 $('input[type="checkbox"]', rows).prop('checked', this.checked);
-                let row_selected = $('#endpoint_table tbody input[type="checkbox"]:checked');
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
                 if (row_selected.length === 0) {
                     $('#remove').attr('disabled', true);
                 } else {
@@ -134,7 +134,7 @@
             });
 
             // Handle click on checkbox to set state of "Select all" control
-            $('#endpoint_table tbody').on('change', 'input[type="checkbox"]', function () {
+            $('#table tbody').on('change', 'input[type="checkbox"]', function () {
                 // If checkbox is not checked
                 if (!this.checked) {
                     let el = $('#select-all').get(0);
@@ -145,7 +145,7 @@
                         el.indeterminate = true;
                     }
                 }
-                let row_selected = $('#volume_table tbody input[type="checkbox"]:checked');
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
                 if (row_selected.length === 0) {
                     $('#remove').attr('disabled', true);
                 } else {
