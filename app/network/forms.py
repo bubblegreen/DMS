@@ -35,3 +35,8 @@ class NetworkCreateForm(FlaskForm):
             network = None
         if network:
             raise ValidationError('Network名称已存在，请重新输入!')
+
+
+class NetworkManageForm(FlaskForm):
+    access = SelectField('权限范围', choices=[(1, '不可见'), (2, '组内'), (3, '公开')], coerce=int)
+    groups = SelectMultipleField('组', coerce=int)

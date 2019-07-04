@@ -1,0 +1,13 @@
+{% for k, container in containers.items() %}
+<tr id="{{ container.id }}">
+    <td>{{ container['Name'] }}</td>
+    <td>{{ container['IPv4Address'] }}</td>
+    <td>{{ container['IPv6Address'] }}</td>
+    <td>{{ container['MacAddress'] }}</td>
+    <td>
+        <button name="leave" class="btn btn-danger btn-xs"
+                onclick="leave('{{ network.id }}', '{{ container.id }}')">Leave Network
+        </button>
+    </td>
+</tr>
+{% endfor %}

@@ -68,19 +68,19 @@
                                             </div>
                                         </div>
                                         {% else %}
-                                            <div class="row">
-                                                <div class="col-sm-2" style="display: block;margin-right: 10px"></div>
-                                                <div class="col-sm-4">
-                                                    {{ name(class='form-control', placeholder='name') }}
-                                                </div>
-                                                <div class="col-sm-4">
-                                                    {{ value(class='form-control', placeholder='value') }}
-                                                </div>
-                                                <div class="col-sm-1">
-                                                    <button class="btn btn-danger" name="rmLabel"><i
-                                                            class="fa fa-trash-o"></i></button>
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>
+                                            <div class="col-sm-4">
+                                                {{ name(class='form-control', placeholder='name') }}
                                             </div>
+                                            <div class="col-sm-4">
+                                                {{ value(class='form-control', placeholder='value') }}
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <button class="btn btn-danger" name="rmLabel"><i
+                                                        class="fa fa-trash-o"></i></button>
+                                            </div>
+                                        </div>
                                         {% endif %}
                                         {% endfor %}
                                         {% if not form.labels.data %}
@@ -95,19 +95,19 @@
                                         {% endif %}
                                     </div>
                                     <!--<div class="form-group">-->
-                                        <!--<div class="row">-->
-                                            <!--<div class="col-sm-2" style="display: block;margin-right: 10px"></div>-->
-                                            <!--<div class="col-sm-4">-->
-                                                <!--{{ form.label_name(class='form-control', placeholder='name') }}-->
-                                            <!--</div>-->
-                                            <!--<div class="col-sm-4">-->
-                                                <!--{{ form.label_value(class='form-control', placeholder='value') }}-->
-                                            <!--</div>-->
-                                            <!--<div class="col-sm-1">-->
-                                                <!--<button class="btn btn-danger" name="rmLabel"><i-->
-                                                        <!--class="fa fa-trash-o"></i></button>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
+                                    <!--<div class="row">-->
+                                    <!--<div class="col-sm-2" style="display: block;margin-right: 10px"></div>-->
+                                    <!--<div class="col-sm-4">-->
+                                    <!--{{ form.label_name(class='form-control', placeholder='name') }}-->
+                                    <!--</div>-->
+                                    <!--<div class="col-sm-4">-->
+                                    <!--{{ form.label_value(class='form-control', placeholder='value') }}-->
+                                    <!--</div>-->
+                                    <!--<div class="col-sm-1">-->
+                                    <!--<button class="btn btn-danger" name="rmLabel"><i-->
+                                    <!--class="fa fa-trash-o"></i></button>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
                                     <!--</div>-->
                                     <div class="form-group">
                                         {{ form.access.label(for='access', class='control-label col-sm-2') }}
@@ -131,6 +131,7 @@
                                         </div>
                                     </div>
                                 </form>
+                                <div class="alert alert-block fade in" style="display: none"></div>
                             </div>
                         </div>
                     </div>
@@ -230,13 +231,18 @@
                 data: $('form').serialize(),
                 processData: false,  // 不处理数据
                 // contentType: false,
-                success: function (result) {
-                    if (result === 'ok') {
-                        let viewUrl = '/volume';
-                        dm.showIndexView(viewUrl);
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg === 'ok') {
+                        alert.removeClass('alert-danger').addClass('alert-success').append($('<h4>Update Success!</h4>'));
                     } else {
-                        dm.loadView(result);
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
                     }
+                    alert.show();
+                    setTimeout(function () {
+                        alert.hide();
+                        alert.empty();
+                    }, 3000);
                 },
                 error: function () {
                     console.log('error');

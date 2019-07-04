@@ -48,3 +48,60 @@ def create_network(endpoint_id, form):
     except (DockerException, APIError) as ex:
         current_app.logger.error(ex)
         return None
+
+
+def get_network_by_hash(endpoint_id, network_hash):
+    endpoint = Endpoint.query.get(endpoint_id)
+    try:
+        client = docker_client(endpoint.url)
+        network = client.networks.get(network_hash)
+        network.db = Network.query.filter(Network.hash == network_hash).first()
+        return network
+    except (DockerException, APIError) as ex:
+        current_app.logger.error(ex)
+        return None
+
+
+def update_network(network_hash, form):
+    try:
+        network_in_db = Network.query.filter(Network.hash == network_hash).first()
+        groups = Group.query.filter(Group.id.in_(form.groups.data)).all()
+        access_id = form.access.data
+        if network_in_db is not None:
+            network_in_db.groups = groups
+            network_in_db.access_id = access_id
+        else:
+            network_in_db = Network()
+            network_in_db.hash = network_hash
+            network_in_db.creator_id = current_user.id
+            network_in_db.groups = groups
+            network_in_db.access_id = access_id
+            db.session.add(network_in_db)
+        db.session.commit()
+        return 'ok'
+    except Exception as ex:
+        current_app.logger.error(ex)
+        return ex
+
+
+def get_network_containers(endpoint_id, network_id):
+    try:
+        endpoint = Endpoint.query.get(endpoint_id)
+        client = docker_client(endpoint.url)
+        network = client.networks.get(network_id)
+        return network.attrs['Containers']
+    except Exception as ex:
+        current_app.logger.error(ex)
+        return {}
+
+
+def leave_container(endpoint_id, network_id, container_id):
+    try:
+        endpoint = Endpoint.query.get(endpoint_id)
+        client = docker_client(endpoint.url)
+        network = client.networks.get(network_id)
+        network.disconnect(container_id)
+        return 'ok'
+    except Exception as ex:
+        current_app.logger.error(ex)
+        return ex

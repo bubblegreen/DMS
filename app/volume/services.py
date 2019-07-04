@@ -52,10 +52,10 @@ def update_volume(form):
         volume_in_db.groups = groups
         volume_in_db.access_id = access_id
         db.session.commit()
-        return volume_in_db
+        return 'ok'
     except Exception as ex:
         form.name.errors.append(ex)
-        return None
+        return ex
 
 
 def get_volume_by_hash(endpoint_id, volume_hash):

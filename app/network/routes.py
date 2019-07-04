@@ -3,7 +3,7 @@ from flask import render_template, jsonify, session, request, current_app
 from flask_login import login_required, current_user
 from app.network import services
 from app.group.services import get_all_groups
-from app.network.forms import NetworkCreateForm
+from app.network.forms import NetworkCreateForm, NetworkManageForm
 
 
 @bp.route('/')
@@ -54,3 +54,49 @@ def create_network():
         else:
             return render_template('network/edit.html', form=form, action='New')
     return render_template('network/edit.html', form=form, action='New')
+
+
+@bp.route('/update/<network_hash>', methods=['GET', 'POST'])
+@login_required
+def update_network(network_hash):
+    endpoint_id = session.get('endpoint_id', '')
+    form = NetworkManageForm()
+    form.groups.choices = list((g.id, g.name) for g in get_all_groups())
+    if form.validate_on_submit():
+        network = services.update_network(network_hash, form)
+        return network
+    network = services.get_network_by_hash(endpoint_id, network_hash)
+    containers = []
+    subnet = ''
+    gateway = ''
+    if network:
+        ipam_config = network.attrs['IPAM']['Config']
+        subnet = ipam_config[0]['Subnet'] if len(ipam_config) > 0 else ''
+        gateway = ipam_config[0]['Gateway'] if len(ipam_config) > 0 else ''
+        containers = network.attrs['Containers']
+    if network.db is not None:
+        form.groups.data = [g.id for g in network.db.groups]
+        form.access.data = network.db.access_id
+    return render_template('network/detail.html', form=form, network=network, containers=containers, action='Update',
+                           subnet=subnet, gateway=gateway)
+
+
+@bp.route('/containers/<network_hash>')
+@login_required
+def get_network_containers(network_hash):
+    endpoint_id = session.get('endpoint_id', '')
+    containers = services.get_network_containers(endpoint_id, network_hash)
+    html = render_template('network/container-list.html', containers=containers)
+    return html
+
+
+@bp.route('/container/leave', methods=['POST'])
+@login_required
+def leave_container():
+    endpoint_id = session.get('endpoint_id', '')
+    params = request.json
+    network_id = params['network_id']
+    container_id = params['container_id']
+    current_app.logger.info(container_id)
+    result = services.leave_container(endpoint_id, network_id, container_id)
+    return result

@@ -59,10 +59,7 @@ def update_volume(volume_hash):
     form.groups.choices = list((g.id, g.name) for g in get_all_groups())
     if form.is_submitted():
         volume = services.update_volume(form)
-        if volume:
-            return 'ok'
-        else:
-            return render_template('volume/edit.html', form=form, action='Update')
+        return volume
     volume = services.get_volume_by_hash(endpoint_id, volume_hash)
     if volume:
         form.name.data = volume.id
