@@ -1,2 +1,0 @@
-let Volume = function () {
-};

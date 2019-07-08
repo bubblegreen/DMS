@@ -36,3 +36,17 @@ def get_containers():
             [container.id, container.name, container.status, stack, image_name, ip, port, create, container.action,
              container.attrs['Image']])
     return jsonify(containers)
+
+
+@bp.route('/action/<action>', methods=['POST'])
+@login_required
+def container_action(action):
+    endpoint_id = session.get('endpoint_id', '')
+    container_hashs = request.json
+    func_name = action + '_containers'
+    func = getattr(services, func_name)
+    result = func(endpoint_id, container_hashs)
+    if isinstance(result, list):
+        return jsonify(result)
+    else:
+        return jsonify([])

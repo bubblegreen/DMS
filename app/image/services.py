@@ -24,58 +24,6 @@ def get_images(endpoint_id):
         return []
     images_in_docker = client.images.list()
     return get_entities_with_authority(role, Image, images_in_docker)
-    # group_ids = [g.id for g in current_user.groups]
-    # if role == 'super':
-    #     images_in_db_dict = image_query_to_dict(Image.query.with_entities(Image.image_hash, Image).all())
-    #     images_exclude_ids = []
-    #     reverse = False
-    # elif role == 'group':
-    #     images_in_db_dict = image_query_to_dict(Image.query.with_entities(Image.image_hash, Image)
-    #                                             .filter(or_(Image.access.has(Access.name == 'all'),
-    #                                                         and_(Image.access.has(Access.name == 'group'),
-    #                                                              Image.groups.any(Group.id.in_(group_ids))),
-    #                                                         Image.creator_id == current_user.id))
-    #                                             .all())
-    #     images_exclude_ids = Image.query.with_entities(Image.image_hash).filter(
-    #         or_(Image.access.has(Access.name == 'none'),
-    #             and_(Image.access.has(Access.name == 'group'),
-    #                  Image.groups.any(~Group.id.in_(group_ids))))).all()
-    #     reverse = False
-    # else:
-    #     images_in_db_dict = image_query_to_dict(Image.query.with_entities(Image.image_hash, Image)
-    #                                             .filter(or_(Image.access.has(Access.name == 'all'),
-    #                                                         and_(Image.access.has(Access.name == 'group'),
-    #                                                              Image.groups.any(Group.id.in_(group_ids))),
-    #                                                         Image.creator_id == current_user.id))
-    #                                             .all())
-    #     images_exclude_ids = []
-    #     reverse = True
-    # images_in_docker = merge_info(images_in_docker, images_in_db_dict, images_exclude_ids, reverse)
-    # return images_in_docker
-
-
-# def merge_image_info(images_in_docker, images_in_db_dict, images_exclude_ids=(), reverse=False):
-#     new_images_in_docker = []
-#     for image in images_in_docker:
-#         if image.attrs['Id'] in images_exclude_ids or (reverse and image.attrs['Id'] not in images_in_db_dict):
-#             continue
-#         if image.attrs['Id'] in list(images_in_db_dict.keys()):
-#             image.is_in_db = True
-#             image.creator = images_in_db_dict[image.attrs['Id']].creator.username
-#             image.action = images_in_db_dict[image.attrs['Id']].creator_id == current_user.id
-#         else:
-#             image.is_in_db = False
-#             image.creator = ''
-#             image.action = current_user.role.name == 'super'
-#         new_images_in_docker.append(image)
-#     return new_images_in_docker
-
-
-# def image_query_to_dict(images_list):
-#     images_dict = dict()
-#     for k, v in images_list:
-#         images_dict[k] = v
-#     return images_dict
 
 
 def handle_image_pull_name(name):
