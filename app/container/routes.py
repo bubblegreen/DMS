@@ -2,6 +2,11 @@ from app.container import bp
 from flask_login import login_required, current_user
 from flask import request, session, render_template, jsonify
 from app.container import services
+from app.container.forms import ContainerCreateForm
+from app.group.services import get_all_groups
+from app.image.services import get_images_tag_list
+from app.volume.services import get_volumes
+from app.network.services import get_networks
 
 
 @bp.route('/')
@@ -50,3 +55,19 @@ def container_action(action):
         return jsonify(result)
     else:
         return jsonify([])
+
+
+@bp.route('/new', methods=['POST', 'GET'])
+@login_required
+def create_container():
+    endpoint_id = session.get('endpoint_id')
+    form = ContainerCreateForm()
+    form.groups.choices = list((g.id, g.name) for g in get_all_groups())
+    form.image.choices = get_images_tag_list(endpoint_id)
+    volume_choices = list((v.id, v.name) for v in get_volumes(endpoint_id))
+    form.volume.set_volumes(volume_choices)
+    form.volume_name.choices = volume_choices
+    form.network.choices = list((n.id, n.name) for n in get_networks(endpoint_id))
+    if form.validate_on_submit():
+        pass
+    return render_template('container/create.html', form=form, action='Create')

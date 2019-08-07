@@ -30,7 +30,7 @@
                                 <h4><i class="fa fa-bars"></i>{{ action }}</h4>
                             </div>
                             <div class="box-body big">
-                                <form id="network" name="network" class="form-horizontal">
+                                <form id="container" name="container" class="form-horizontal">
 
                                     <div class="form-group">
                                         {{ form.name.label(for='name', class='control-label col-sm-2') }}
@@ -42,37 +42,51 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        {{ form.driver.label(for='driver', class='control-label col-sm-2') }}
+                                        {{ form.image.label(for='image', class='control-label col-sm-2') }}
                                         <div class="col-sm-10">
-                                            {{ form.driver(class='form-control') }}
+                                            {{ form.image(class='form-control') }}
                                         </div>
                                     </div>
-
-                                    <div class="form-group" id="option">
-                                        <label class="control-label col-sm-2">Driver Options</label>
+                                    <div class="form-group form-inline">
+                                        {{ form.publish_all_port.label(for='publish_all_port', class='control-label
+                                        col-sm-3') }}
+                                        <div class="col-sm-2">
+                                            {{ form.publish_all_port(class='form-control') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="port">
+                                        <label class="control-label col-sm-2">添加端口映射</label>
                                         <div class="col-sm-10">
-                                            <button id="addOption" class="btn btn-inverse btn-xs"><i
-                                                    class="fa fa-plus-circle"></i> Add Option
+                                            <button id="addPort" class="btn btn-inverse btn-xs"><i
+                                                    class="fa fa-plus-circle"></i> Add Publish Port
                                             </button>
                                         </div>
-                                        {% for name, value in form.options %}
+                                        {% for host, container in form.publish_port %}
                                         {% if loop.index == 1 %}
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                {{ name(class='form-control', placeholder='e.g. com.docker.network.bridge.enable_icc') }}
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">host</span>
+                                                    {{ name(class='form-control', placeholder='e.g. 80 or 1.2.3.4:80
+                                                    (optional)') }}
+                                                </div>
                                             </div>
                                             <div class="col-sm-4">
-                                                {{ value(class='form-control', placeholder='e.g. true') }}
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">container</span>
+                                                    {{ value(class='form-control', placeholder='e.g. 80') }}
+                                                </div>
                                             </div>
                                         </div>
                                         {% else %}
                                         <div class="row">
                                             <div class="col-sm-2" style="display: block;margin-right: 10px"></div>
                                             <div class="col-sm-4">
-                                                {{ name(class='form-control', placeholder='e.g. com.docker.network.bridge.enable_icc') }}
+                                                {{ name(class='form-control', placeholder='e.g. 80 or 1.2.3.4:80
+                                                (optional)') }}
                                             </div>
                                             <div class="col-sm-4">
-                                                {{ value(class='form-control', placeholder='e.g. true') }}
+                                                {{ value(class='form-control', placeholder='e.g. 80') }}
                                             </div>
                                             <div class="col-sm-1">
                                                 <button class="btn btn-danger" name="rmLabel"><i
@@ -81,117 +95,17 @@
                                         </div>
                                         {% endif %}
                                         {% endfor %}
-                                        {% if not form.options.data %}
+                                        {% if not form.publish_port.data %}
                                         <div class="row">
                                             <div class="col-sm-4">
-                                                {{ form.opt_name(class='form-control', placeholder='e.g. com.docker.network.bridge.enable_icc') }}
+                                                {{ form.host_port(class='form-control', placeholder='e.g. 80 or
+                                                1.2.3.4:80 (optional)') }}
                                             </div>
                                             <div class="col-sm-4">
-                                                {{ form.opt_value(class='form-control', placeholder='e.g. true') }}
+                                                {{ form.container_port(class='form-control', placeholder='e.g. 80') }}
                                             </div>
                                         </div>
                                         {% endif %}
-                                    </div>
-
-                                    <div class="form-group form-inline">
-                                        {{ form.subnet.label(for='subnet', class='control-label col-sm-2') }}
-                                        <div class="col-sm-4">
-                                            {{ form.subnet(class='form-control') }}
-                                            {% for error in form.subnet.errors %}
-                                            <span style="color: red;">[{{ error }}]</span>
-                                            {% endfor %}
-                                        </div>
-                                        {{ form.gateway.label(for='gateway', class='control-label col-sm-2') }}
-                                        <div class="col-sm-4">
-                                            {{ form.gateway(class='form-control') }}
-                                            {% for error in form.gateway.errors %}
-                                            <span style="color: red;">[{{ error }}]</span>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    <div class="form-group form-inline">
-                                        {{ form.ip_range.label(for='ip_range', class='control-label col-sm-2') }}
-                                        <div class="col-sm-4">
-                                            {{ form.ip_range(class='form-control') }}
-                                            {% for error in form.ip_range.errors %}
-                                            <span style="color: red;">[{{ error }}]</span>
-                                            {% endfor %}
-                                        </div>
-                                        {{ form.exclude_ips.label(for='exclude_ips', class='control-label col-sm-2') }}
-                                        <div class="col-sm-4">
-                                            {{ form.exclude_ips(class='form-control') }}
-                                            {% for error in form.exclude_ips.errors %}
-                                            <span style="color: red;">[{{ error }}]</span>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    <div class="form-group" id="label">
-                                        <label class="control-label col-sm-2">Labels</label>
-                                        <div class="col-sm-10">
-                                            <button id="addLabel" class="btn btn-inverse btn-xs"><i
-                                                    class="fa fa-plus-circle"></i> Add Label
-                                            </button>
-                                        </div>
-                                        {% for name, value in form.labels %}
-                                        {% if loop.index == 1 %}
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                {{ name(class='form-control', placeholder='name') }}
-                                            </div>
-                                            <div class="col-sm-4">
-                                                {{ value(class='form-control', placeholder='value') }}
-                                            </div>
-                                        </div>
-                                        {% else %}
-                                        <div class="row">
-                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>
-                                            <div class="col-sm-4">
-                                                {{ name(class='form-control', placeholder='name') }}
-                                            </div>
-                                            <div class="col-sm-4">
-                                                {{ value(class='form-control', placeholder='value') }}
-                                            </div>
-                                            <div class="col-sm-1">
-                                                <button class="btn btn-danger" name="rmLabel"><i
-                                                        class="fa fa-trash-o"></i></button>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% endfor %}
-                                        {% if not form.labels.data %}
-                                        <div class="row">
-                                            <div class="col-sm-4">
-                                                {{ form.label_name(class='form-control', placeholder='name') }}
-                                            </div>
-                                            <div class="col-sm-4">
-                                                {{ form.label_value(class='form-control', placeholder='value') }}
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                    <!--<div class="form-group">-->
-                                    <!--<div class="row">-->
-                                    <!--<div class="col-sm-2" style="display: block;margin-right: 10px"></div>-->
-                                    <!--<div class="col-sm-4">-->
-                                    <!--{{ form.label_name(class='form-control', placeholder='name') }}-->
-                                    <!--</div>-->
-                                    <!--<div class="col-sm-4">-->
-                                    <!--{{ form.label_value(class='form-control', placeholder='value') }}-->
-                                    <!--</div>-->
-                                    <!--<div class="col-sm-1">-->
-                                    <!--<button class="btn btn-danger" name="rmLabel"><i-->
-                                    <!--class="fa fa-trash-o"></i></button>-->
-                                    <!--</div>-->
-                                    <!--</div>-->
-                                    <!--</div>-->
-                                    <div class="form-group form-inline">
-                                        {{ form.internal.label(class='control-label col-sm-offset-1', for='internal') }}&nbsp;
-                                        {{ form.internal() }}
-                                    </div>
-                                    <div class="form-group form-inline">
-                                        {{ form.attachable.label(class='control-label col-sm-offset-1', for='internal')
-                                        }}&nbsp;
-                                        {{ form.attachable() }}
                                     </div>
                                     <div class="form-group">
                                         {{ form.access.label(for='access', class='control-label col-sm-2') }}
@@ -205,13 +119,384 @@
                                             {{ form.groups(class='select-multiple') }}
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-2">
-                                            {% if action == 'New' %}
-                                            <button class="btn btn-success" onclick="save(event)">提交</button>
-                                            {% else %}
-                                            <button class="btn btn-success" onclick="update(event)">提交</button>
-                                            {% endif %}
+                                    <div class="form-group form-inline">
+                                        {{ form.auto_remove.label(for='auto_remove', class='control-label col-sm-3') }}
+                                        <div class="col-sm-2">
+                                            {{ form.auto_remove() }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="panel panel-default">
+                                                <div class="panel-body">
+                                                    <div class="tabbable">
+                                                        <ul class="nav nav-tabs">
+                                                            <li class="active">
+                                                                <a href="#commands" data-toggle="tab">Command</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#volume_set" data-toggle="tab">Volumes</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#network_set" data-toggle="tab">Network</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#env" data-toggle="tab">Env</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#labels" data-toggle="tab">Labels</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#restart" data-toggle="tab">Restart policy</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#resource" data-toggle="tab">Runtime &
+                                                                    Resources</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="tab-content">
+                                                            <div class="tab-pane fade in active" id="commands">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group">
+                                                                    {{ form.command.label(class='control-label
+                                                                    col-sm-2', for='command') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.command(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.entrypoint.label(class='control-label
+                                                                    col-sm-2', for='command') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.entrypoint(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group form-inline">
+                                                                    {{ form.workdir.label(class='control-label
+                                                                    col-sm-2', for='command') }}
+                                                                    <div class="col-sm-4">
+                                                                        {{ form.workdir(class='form-control') }}
+                                                                    </div>
+                                                                    {{ form.user.label(class='control-label col-sm-2',
+                                                                    for='command') }}
+                                                                    <div class="col-sm-4">
+                                                                        {{ form.user(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="volume_set">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group" id="volume_mapping">
+                                                                    <label class="control-label col-sm-2">Volume
+                                                                        mapping</label>
+                                                                    <div class="col-sm-10">
+                                                                        <button id="addVolume"
+                                                                                class="btn btn-inverse btn-xs">
+                                                                            <i class="fa fa-plus-circle"></i>add volume
+                                                                        </button>
+                                                                    </div>
+                                                                    {% for volume, container in form.volume %}
+                                                                    {% if loop.index == 1 %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ container(class='form-control') }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ volume(class='form-control') }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% else %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-2"
+                                                                             style="display: block;margin-right: 10px"></div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ container(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ volume(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                            <button class="btn btn-danger"
+                                                                                    name="rmLabel"><i
+                                                                                    class="fa fa-trash-o"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                    {% if not form.volume.data %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.bind_path(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.volume_name(class='form-control') }}
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="network_set">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group">
+                                                                    {{ form.network.label(class='control-label
+                                                                    col-sm-2', for='network') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.network(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.hostname.label(class='control-label
+                                                                    col-sm-2', for='hostname') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.hostname(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.domain.label(class='control-label
+                                                                    col-sm-2', for='domain') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.domain(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.mac.label(class='control-label
+                                                                    col-sm-2', for='mac') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.mac(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.ip4.label(class='control-label
+                                                                    col-sm-2', for='ip4') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.ip4(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.ip6.label(class='control-label
+                                                                    col-sm-2', for='ip6') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.ip6(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="env">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group" id="env_add">
+                                                                    <label class="control-label col-sm-2">Environment
+                                                                        variables</label>
+                                                                    <div class="col-sm-10">
+                                                                        <button id="addEnv"
+                                                                                class="btn btn-inverse btn-xs">
+                                                                            <i class="fa fa-plus-circle"></i>add
+                                                                            environment
+                                                                        </button>
+                                                                    </div>
+                                                                    {% for name, value in form.env %}
+                                                                    {% if loop.index == 1 %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ name(class='form-control') }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ value(class='form-control') }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% else %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-2"
+                                                                             style="display: block;margin-right: 10px"></div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ name(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ value(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                            <button class="btn btn-danger"
+                                                                                    name="rmLabel"><i
+                                                                                    class="fa fa-trash-o"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                    {% if not form.env.data %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.env_name(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.env_value(class='form-control') }}
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="labels">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group" id="label_add">
+                                                                    <label class="control-label col-sm-2">Labels</label>
+                                                                    <div class="col-sm-10">
+                                                                        <button id="addLabel"
+                                                                                class="btn btn-inverse btn-xs">
+                                                                            <i class="fa fa-plus-circle"></i>add label
+                                                                        </button>
+                                                                    </div>
+                                                                    {% for name, value in form.labels %}
+                                                                    {% if loop.index == 1 %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ name(class='form-control') }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ value(class='form-control') }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% else %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-2"
+                                                                             style="display: block;margin-right: 10px"></div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ name(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ value(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                            <button class="btn btn-danger"
+                                                                                    name="rmLabel"><i
+                                                                                    class="fa fa-trash-o"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                    {% if not form.labels.data %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.label_name(class='form-control') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.label_value(class='form-control') }}
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="restart">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group">
+                                                                    {{ form.restart.label(for='restart',
+                                                                    class='control-label col-sm-2') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.restart(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="tab-pane fade" id="resource">
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group">
+                                                                    {{ form.privileged.label(for='privileged',
+                                                                    class='control-label col-sm-2') }}
+                                                                    <div class="col-sm-10">
+                                                                        {{ form.privileged(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" id="device">
+                                                                    <label class="control-label col-sm-2">Devices</label>
+                                                                    <div class="col-sm-10">
+                                                                        <button id="addDevice"
+                                                                                class="btn btn-inverse btn-xs">
+                                                                            <i class="fa fa-plus-circle"></i>add device
+                                                                        </button>
+                                                                    </div>
+                                                                    {% for name, value in form.devices %}
+                                                                    {% if loop.index == 1 %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ name(class='form-control',
+                                                                                placeholder='host') }}
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            <div class="input-group">
+                                                                                {{ value(class='form-control',
+                                                                                placeholder='container') }}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% else %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-2"
+                                                                             style="display: block;margin-right: 10px"></div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ name(class='form-control',
+                                                                            placeholder='host') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ value(class='form-control',
+                                                                            placeholder='container') }}
+                                                                        </div>
+                                                                        <div class="col-sm-1">
+                                                                            <button class="btn btn-danger"
+                                                                                    name="rmLabel"><i
+                                                                                    class="fa fa-trash-o"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                    {% endfor %}
+                                                                    {% if not form.labels.data %}
+                                                                    <div class="row">
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.dev_host(class='form-control',
+                                                                            placeholder='host') }}
+                                                                        </div>
+                                                                        <div class="col-sm-4">
+                                                                            {{ form.dev_container(class='form-control',
+                                                                            placeholder='container') }}
+                                                                        </div>
+                                                                    </div>
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="divide-20"></div>
+                                                                <div class="form-group">
+                                                                    {{ form.mem_soft_limit.label(class='control-label
+                                                                    col-sm-2', for='mem_soft_limit') }}
+                                                                    <div class="col-sm-8">
+                                                                        {{ form.mem_soft_limit(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.mem_limit.label(class='control-label
+                                                                    col-sm-2', for='mem_limit') }}
+                                                                    <div class="col-sm-8">
+                                                                        {{ form.mem_limit(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    {{ form.cpu.label(class='control-label col-sm-2',
+                                                                    for='cpu') }}
+                                                                    <div class="col-sm-8">
+                                                                        {{ form.cpu(class='form-control') }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>
@@ -227,9 +512,66 @@
         var csrftoken = "{{ csrf_token() }}";
         var id = "{{ network_id }}";
 
+        let addPort = function (event) {
+            event.preventDefault();
+            $('#port').after($('<div class="form-group">\n' +
+                '                                        <div class="row">\n' +
+                '                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '{{ form.host_port(class="form-control", placeholder="e.g. 80 or 1.2.3.4:80 (optional)") }}' + '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '{{ form.container_port(class="form-control", placeholder="e.g. 80") }}' + '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-1">\n' +
+                '                                            <button class="btn btn-danger" tabindex="-1" name="rmLabel" onclick="removeLabel(event)"><i\n' +
+                '                                            class="fa fa-trash-o"></i></button>\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '                                    </div>'));
+        };
+
+        let addVolume = function (event) {
+            event.preventDefault();
+            $('#volume_mapping').after($('<div class="form-group">\n' +
+                '                                        <div class="row">\n' +
+                '                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '{{ form.bind_path(class="form-control", placeholder="host path to bind") }}' + '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '{{ form.volume_name(class="form-control") }}' + '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-1">\n' +
+                '                                            <button class="btn btn-danger" tabindex="-1" name="rmLabel" onclick="removeLabel(event)"><i\n' +
+                '                                            class="fa fa-trash-o"></i></button>\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '                                    </div>'));
+        };
+
+        let addEnv = function (event) {
+            event.preventDefault();
+            $('#env_add').after($('<div class="form-group">\n' +
+                '                                        <div class="row">\n' +
+                '                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '{{ form.env_name(class="form-control", placeholder="env name") }}' + '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-4">\n' +
+                '{{ form.env_value(class="form-control", placeholder="env value") }}' + '\n' +
+                '                                            </div>\n' +
+                '                                            <div class="col-sm-1">\n' +
+                '                                            <button class="btn btn-danger" tabindex="-1" name="rmLabel" onclick="removeLabel(event)"><i\n' +
+                '                                            class="fa fa-trash-o"></i></button>\n' +
+                '                                            </div>\n' +
+                '                                        </div>\n' +
+                '                                    </div>'));
+        };
+
         let addLabel = function (event) {
             event.preventDefault();
-            $('#label').after($('<div class="form-group">\n' +
+            $('#label_add').after($('<div class="form-group">\n' +
                 '                                        <div class="row">\n' +
                 '                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>\n' +
                 '                                            <div class="col-sm-4">\n' +
@@ -246,16 +588,16 @@
                 '                                    </div>'));
         };
 
-        let addOption = function (event) {
+        let addDevice = function (event) {
             event.preventDefault();
-            $('#option').after($('<div class="form-group">\n' +
+            $('#device').after($('<div class="form-group">\n' +
                 '                                        <div class="row">\n' +
                 '                                            <div class="col-sm-2" style="display: block;margin-right: 10px"></div>\n' +
                 '                                            <div class="col-sm-4">\n' +
-                '{{ form.opt_name(class="form-control", placeholder="e.g. com.docker.network.bridge.enable_icc") }}' + '\n' +
+                '{{ form.dev_host(class="form-control", placeholder="host") }}' + '\n' +
                 '                                            </div>\n' +
                 '                                            <div class="col-sm-4">\n' +
-                '{{ form.opt_value(class="form-control", placeholder="e.g. true") }}' + '\n' +
+                '{{ form.dev_container(class="form-control", placeholder="container") }}' + '\n' +
                 '                                            </div>\n' +
                 '                                            <div class="col-sm-1">\n' +
                 '                                            <button class="btn btn-danger" tabindex="-1" name="rmLabel" onclick="removeLabel(event)"><i\n' +
@@ -274,15 +616,24 @@
                 //closeOnSelect: false,
                 width: '100%'
             });
+            let addPortBtn = $('#addPort');
+            let addVolumeBtn = $('#addVolume');
+            let addEnvBtn = $('#addEnv');
             let addLabelBtn = $('#addLabel');
-            let addOptionBtn = $('#addOption');
+            let addDeviceBtn = $('#addDevice');
+            addPortBtn.on('click', addPort);
+            addVolumeBtn.on('click', addVolume);
+            addEnvBtn.on('click', addEnv);
             addLabelBtn.on('click', addLabel);
-            addOptionBtn.on('click', addOption);
-            if ("{{ action }}" !== 'New') {
+            addDeviceBtn.on('click', addDevice);
+            if ("{{ action }}" !== 'Create') {
                 $('input[type=text]').attr('readonly', true);
                 $('#driver').attr('disabled', true);
+                addPortBtn.hide();
+                addVolumeBtn.hide();
+                addEnvBtn.hide();
                 addLabelBtn.hide();
-                addOptionBtn.hide();
+                addDeviceBtn.hide();
                 $('button[name="rmLabel"]').hide();
             }
         });

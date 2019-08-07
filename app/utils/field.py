@@ -63,7 +63,7 @@ class LabelsField(Field):
     def __iter__(self):
         if self.data:
             for k, v in self.data.items():
-                label = StringField(_name=self.key_name, validators=[DataRequired()], _form=None, _meta=self.meta)
+                label = StringField(_name=self.key_name, _form=None, _meta=self.meta)
                 value = StringField(_name=self.value_name, _form=None, _meta=self.meta)
                 label.process(None, k)
                 value.process(None, v)

@@ -26,6 +26,16 @@ def get_images(endpoint_id):
     return get_entities_with_authority(role, Image, images_in_docker)
 
 
+def get_images_tag_list(endpoint_id):
+    images = get_images(endpoint_id)
+    tag_list = []
+    for image in images:
+        image_hash = image.id
+        for tag in image.tags:
+            tag_list.append((image_hash, tag))
+    return tag_list
+
+
 def handle_image_pull_name(name):
     if len(name.split('/')) == 1:
         name = 'library/' + name

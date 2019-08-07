@@ -115,3 +115,7 @@ def remove_containers(endpoint_id, container_hashs):
     if 0 < len(fail_list):
         return fail_list
     return True
+
+
+def run_container(endpoin_id, form):
+    pass
