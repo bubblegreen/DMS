@@ -105,13 +105,15 @@
                                 <span class="menu-text" value="dashboard">Dashboard</span>
                             </a>
                         </li>
-                        <li id="stack">
+                        <!--todo 暂时隐藏stack菜单，后续添加-->
+                        <li id="stack" style="display: none">
                             <a href="javascript:;">
                                 <i class="fa fa-th-list fa-fw"></i>
                                 <span class="menu-text" value="stack">Stacks</span>
                             </a>
                         </li>
-                        <li id="service" class="swarm">
+                        <!--todo 暂时隐藏service菜单，后续添加功能，class="swarm"-->
+                        <li id="service" style="display: none">
                             <a href="javascript:;">
                                 <i class="fa fa-list-alt fa-fw"></i>
                                 <span class="menu-text" value="service">Services</span>
@@ -141,13 +143,15 @@
                                 <span class="menu-text" value="volume">Volumes</span>
                             </a>
                         </li>
-                        <li id="swarm" class="swarm">
+                        <!--todo 暂时隐藏swarm菜单，后续添加功能，class="swarm"-->
+                        <li id="swarm" style="display: none">
                             <a href="javascript:;">
                                 <i class="fa fa-cogs fa-fw"></i>
                                 <span class="menu-text" value="swarm">Swarm</span>
                             </a>
                         </li>
-                        <li id="host" class="standalone">
+                        <!--todo 暂时隐藏host菜单，后续添加功能，class="standalone"-->
+                        <li id="host" style="display: none">
                             <a href="javascript:;">
                                 <i class="fa fa-th fa-fw"></i>
                                 <span class="menu-text" value="host">Host</span>
@@ -180,7 +184,8 @@
                                 <span class="menu-text" value="endpoint">Endpoints</span>
                             </a>
                         </li>
-                        <li class="admin" id="registry">
+                        <!--暂时不添加registry管理，隐藏该菜单，以后使用时，需给li添加class="admin"属性-->
+                        <li id="registry" style="display: none">
                             <a href="javascript:;">
                                 <i class="fa fa-cloud-upload fa-fw"></i>
                                 <span class="menu-text" value="registry">Registries</span>

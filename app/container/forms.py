@@ -6,7 +6,7 @@ from app.utils.field import LabelsField, VolumesField
 
 class ContainerCreateForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
-    image = SelectField('Image', choices=int)
+    image = SelectField('Image')
     publish_all_port = BooleanField('Publish all export ports')
     publish_port = LabelsField('Publish port', key_name='host_port', value_name='container_port')
     host_port = StringField()

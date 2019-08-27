@@ -31,6 +31,10 @@ class LabelsField(Field):
                     self.process_errors.append('Label的key和value没有一一对应！')
                     self.data = {}
                     return
+                if len(formdata.getlist(self.key_name)) == len(formdata.getlist(self.value_name)) == \
+                        formdata.getlist(self.key_name).count('') == formdata.getlist(self.value_name).count(''):
+                    self.data = {}
+                    return
                 if len(formdata.getlist(self.key_name)) != len(set(formdata.getlist(self.key_name))):
                     self.process_errors.append('Label的key有重复值！')
                     self.data = {}
@@ -99,12 +103,20 @@ class VolumesField(Field):
                     self.process_errors.append('volume_name和bind_path没有一一对应！')
                     self.data = {}
                     return
+                if len(formdata.getlist(self.key_name)) == len(formdata.getlist(self.value_name)) == \
+                        formdata.getlist(self.key_name).count('') == formdata.getlist(self.value_name).count(''):
+                    self.data = {}
+                    return
                 if len(formdata.getlist(self.key_name)) != len(set(formdata.getlist(self.key_name))):
                     self.process_errors.append('volume_name有重复值！')
                     self.data = {}
                     return
                 if '' in [x.strip() for x in formdata.getlist(self.key_name)]:
                     self.process_errors.append('volume_name不能有空值！')
+                    self.data = {}
+                    return
+                if '' in [x.strip() for x in formdata.getlist(self.value_name)]:
+                    self.process_errors.append('bind_path不能有空值！')
                     self.data = {}
                     return
                 self.raw_data = zip(formdata.getlist(self.key_name), formdata.getlist(self.value_name))

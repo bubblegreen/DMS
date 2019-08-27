@@ -1,6 +1,6 @@
 from app.container import bp
 from flask_login import login_required, current_user
-from flask import request, session, render_template, jsonify
+from flask import request, session, render_template, jsonify, current_app
 from app.container import services
 from app.container.forms import ContainerCreateForm
 from app.group.services import get_all_groups
@@ -65,9 +65,15 @@ def create_container():
     form.groups.choices = list((g.id, g.name) for g in get_all_groups())
     form.image.choices = get_images_tag_list(endpoint_id)
     volume_choices = list((v.id, v.name) for v in get_volumes(endpoint_id))
+    volume_choices.insert(0, ('', ''))
     form.volume.set_volumes(volume_choices)
     form.volume_name.choices = volume_choices
     form.network.choices = list((n.id, n.name) for n in get_networks(endpoint_id))
     if form.validate_on_submit():
-        pass
+        result = services.run_container(endpoint_id, form)
+        if result != 'ok':
+            return render_template('container/create.html', form=form, action='Create')
+        else:
+            return result
+    current_app.logger.info(form.errors)
     return render_template('container/create.html', form=form, action='Create')
