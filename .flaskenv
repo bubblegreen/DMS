@@ -1,2 +1,2 @@
-FLASK_APP=mng.py
+FLASK_APP=dms.py
 FLASK_DEBUG=0
