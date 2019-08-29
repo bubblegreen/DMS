@@ -105,3 +105,17 @@ def leave_container(endpoint_id, network_id, container_id):
     except Exception as ex:
         current_app.logger.error(ex)
         return ex
+
+
+def join_container(endpoint_id, network_id, container_id):
+    try:
+        endpoint = Endpoint.query.get(endpoint_id)
+        client = docker_client(endpoint.url)
+        network = client.networks.get(network_id)
+        container = client.containers.get(container_id)
+        if network.name not in container.attrs['NetworkSettings']['Networks'].keys():
+            network.connect(container_id)
+        return 'ok'
+    except (APIError, DockerException) as ex:
+        current_app.logger.error(ex)
+        return 'Docker service error'

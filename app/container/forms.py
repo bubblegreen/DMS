@@ -42,3 +42,9 @@ class ContainerCreateForm(FlaskForm):
     mem_soft_limit = StringField('Memory reservation')
     mem_limit = StringField('Memory limit')
     cpu = StringField('CPU limit')
+
+
+class ContainerUpdateForm(FlaskForm):
+    access = SelectField('权限范围', choices=[(1, '不可见'), (2, '组内'), (3, '公开')], coerce=int)
+    groups = SelectMultipleField('组', coerce=int)
+    networks = SelectField('Network')

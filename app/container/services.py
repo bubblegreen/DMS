@@ -1,7 +1,7 @@
 from app.utils.docker import docker_client
 from app.models import Endpoint, Container, Group
 from flask_login import current_user
-from docker.errors import DockerException, APIError, ContainerError, ImageNotFound
+from docker.errors import DockerException, APIError, ContainerError, ImageNotFound, NotFound
 from sqlalchemy.exc import DBAPIError
 from flask import current_app
 from app.utils.docker import get_entities_with_authority
@@ -125,7 +125,7 @@ def run_container(endpoint_id, form):
         client = docker_client(url)
     except DockerException:
         current_app.logger.error('Cannot connect to docker server: %s' % url)
-        return False
+        return 'Docker服务不可用'
     access_id = form.access.data
     group_ids = form.groups.data
     image_hash = form.image.data
@@ -202,3 +202,55 @@ def run_container(endpoint_id, form):
         if container_obj is not None:
             container_obj.remove(force=True)
         return ex
+
+
+def get_container(endpoint_id, container_hash):
+    url = Endpoint.query.get(endpoint_id).url
+    try:
+        client = docker_client(url)
+    except DockerException:
+        current_app.logger.error('Cannot connect to docker server: %s' % url)
+        return 'Docker服务不可用'
+    try:
+        container = client.containers.get(container_hash)
+        container_in_db = Container.query.filter(Container.hash == container_hash).first()
+        container.db = container_in_db
+        return container
+    except (APIError, NotFound) as ex:
+        return ex
+
+
+def rename_container(endpoint_id, container_hash, new_name):
+    url = Endpoint.query.get(endpoint_id).url
+    try:
+        client = docker_client(url)
+    except DockerException:
+        current_app.logger.error('Cannot connect to docker server: %s' % url)
+        return 'Docker服务不可用'
+    try:
+        container = client.containers.get(container_hash)
+        if new_name != container.name:
+            container.rename(new_name)
+        return 'ok'
+    except APIError as ex:
+        return ex
+
+
+def update_permission(container_hash, form):
+    access_id = form.access.data
+    groups_id = form.groups.data
+    try:
+        container_in_db = Container.query.filter(Container.hash == container_hash).first()
+        if container_in_db is None:
+            container_in_db = Container()
+            container_in_db.hash = container_hash
+            container_in_db.creator_id = current_user.id
+            db.session.add(container_in_db)
+        container_in_db.access_id = access_id
+        container_in_db.groups = Group.query.filter(Group.id.in_(groups_id)).all()
+        db.session.commit()
+        return 'ok'
+    except DBAPIError as ex:
+        current_app.logger.error(ex)
+        db.session.rollback()
+        return 'Database error'

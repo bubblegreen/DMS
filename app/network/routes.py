@@ -97,6 +97,5 @@ def leave_container():
     params = request.json
     network_id = params['network_id']
     container_id = params['container_id']
-    current_app.logger.info(container_id)
     result = services.leave_container(endpoint_id, network_id, container_id)
     return result

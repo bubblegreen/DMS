@@ -1,0 +1,408 @@
+<div class="container">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <!-- PAGE HEADER-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <!-- BREADCRUMBS -->
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="#">Containers</a>
+                            </li>
+                            <li>
+                                details
+                            </li>
+                        </ul>
+                        <!-- /BREADCRUMBS -->
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+            <!--row-->
+            <div id="main">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="alert alert-block fade in" style="display: none"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box border">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Base Info</h4>
+                            </div>
+                            <div class="box-body">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="name"
+                                                       value="{{ container.name }}" text="{{ container.name }}">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-primary" type="button"
+                                                            id="rename">Rename</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    Image
+                                                </span>
+                                                <input class="form-control" value="{{ container.image.tags[0] }}"
+                                                       readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box border">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Permission</h4>
+                            </div>
+                            <div class="box-body">
+                                <form class="form-horizontal" name="container" id="permission_form">
+                                    <div class="form-group">
+                                        {{ form.access.label(for='access', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.access(class='form-control') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        {{ form.groups.label(for='groups', class='control-label col-sm-2') }}
+                                        <div class="col-sm-10">
+                                            {{ form.groups(class='select-multiple') }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2">
+                                            <button class="btn btn-primary" id="permission">UPDATE</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box border">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Networks</h4>
+                            </div>
+                            <div class="box-body">
+                                <form class="form-horizontal" id="network-form">
+                                    <div class="form-group">
+                                        {{ form.networks.label(class='control-label col-sm-2', for='network') }}
+                                        <div class="col-sm-6">
+                                            <div class="input-group">
+                                                {{ form.networks(class='form-control') }}
+                                                <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary"
+                                                            id="join">Join</button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>IP Address</th>
+                                        <th>MAC Address</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="network-list">
+                                    {{ network_list | safe }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- BOX -->
+                        <div class="box border">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Ports Published</h4>
+                            </div>
+                            <div class="box-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Host</th>
+                                        <th>Container</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for container, host in container.ports.items() %}
+                                    <tr>
+                                        <td>{{ host[0]['HostIp'] }}:{{ host[0]['HostPort'] }}</td>
+                                        <td>{{ container }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /BOX -->
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="box border">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Labels</h4>
+                            </div>
+                            <div class="box-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Key</th>
+                                        <th>Value</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for key, value in container.labels.items() %}
+                                    <tr>
+                                        <td>{{ key }}</td>
+                                        <td>{{ value }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}";
+        var id = "{{ container.id }}";
+
+        function rename(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            let btn = $('#rename');
+            let newName = $('#name').val();
+            btn.button('loading');
+            $.ajax({
+                url: '/container/rename/' + id,
+                type: 'post',
+                data: JSON.stringify({'name': newName}),
+                processData: false,  // 不处理数据
+                contentType: 'application/json',
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg['result'] === 'ok') {
+                        alert.removeClass('alert-danger').addClass('alert-success').append($('<h4>Update Success!</h4>'));
+                    } else {
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
+                    }
+                    btn.button('reset');
+                    alert.show();
+                    setTimeout(function () {
+                        alert.hide();
+                        alert.empty();
+                    }, 3000);
+                },
+                error: function () {
+                    btn.button('reset');
+                    console.log('error');
+                }
+            });
+        }
+
+        function updatePermission(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            let btn = $('#permission');
+            let form = $('#permission_form');
+            btn.button('loading');
+            $.ajax({
+                url: '/container/permission/' + id,
+                type: 'post',
+                data: form.serialize(),
+                processData: false,  // 不处理数据
+                // contentType: 'application/json',
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg['result'] === 'ok') {
+                        alert.removeClass('alert-danger').addClass('alert-success').append($('<h4>Update Success!</h4>'));
+                    } else {
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
+                    }
+                    btn.button('reset');
+                    alert.show();
+                    setTimeout(function () {
+                        alert.hide();
+                        alert.empty();
+                    }, 3000);
+                },
+                error: function () {
+                    btn.button('reset');
+                    console.log('error');
+                }
+            });
+        }
+
+        function join(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            let btn = $('#join');
+            let networkSelect = document.getElementById('networks');
+            let networkId = networkSelect.options[networkSelect.selectedIndex].value;
+            btn.button('loading');
+            $.ajax({
+                url: '/container/join/' + id,
+                type: 'post',
+                data: JSON.stringify({'network_id': networkId}),
+                processData: false,  // 不处理数据
+                contentType: 'application/json',
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg['result'] === 'ok') {
+                        alert.removeClass('alert-danger').addClass('alert-success').append($('<h4>Update Success!</h4>'));
+                        let networkList = $('#network-list');
+                        networkList.empty();
+                        networkList.load('/container/networks/' + id)
+                    } else {
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
+                    }
+                    btn.button('reset');
+                    alert.show();
+                    setTimeout(function () {
+                        alert.hide();
+                        alert.empty();
+                    }, 3000);
+                },
+                error: function () {
+                    btn.button('reset');
+                    console.log('error');
+                }
+            });
+        }
+
+        function leave(networkName) {
+            // event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            let btn = $(event.currentTarget);
+            btn.button('loading');
+            $.ajax({
+                url: '/network/container/leave',
+                type: 'post',
+                data: JSON.stringify({'network_id': networkName, 'container_id': id}),
+                processData: false,  // 不处理数据
+                contentType: 'application/json',
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg === 'ok') {
+                        let networkList = $('#network-list');
+                        networkList.empty();
+                        networkList.load('/container/networks/' + id)
+                    } else {
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
+                        alert.show();
+                        setTimeout(function () {
+                            alert.hide();
+                            alert.empty();
+                        }, 3000);
+                        btn.button('reset');
+                    }
+                },
+                error: function () {
+                    btn.button('reset');
+                    console.log('error');
+                }
+            });
+        }
+
+        $().ready(function () {
+            $('#groups').select2({
+                allowClear: true,
+                formatNoMatches: function () {
+                    return '';
+                },
+                //closeOnSelect: false,
+                width: '100%'
+            });
+            $('#rename').on('click', rename);
+            $('#permission').on('click', updatePermission);
+            $('#join').on('click', join);
+            $('button[name="leave"]').on('click', leave);
+        });
+
+
+        function update(event) {
+            event.preventDefault();
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+            $.ajax({
+                url: '/image/update/' + id,
+                type: 'post',
+                data: $('#manage').serialize(),
+                processData: false,  // 不处理数据
+                // contentType: false,
+                success: function (msg) {
+                    let alert = $('div.alert');
+                    if (msg === 'ok') {
+                        alert.removeClass('alert-danger').addClass('alert-success').append($('<h4>Update Success!</h4>'));
+                    } else {
+                        alert.removeClass('alert-success').addClass('alert-danger').append($('<h4>' + msg + '</4>'));
+                    }
+                    alert.show();
+                    setTimeout(function () {
+                        alert.hide();
+                        alert.empty();
+                    }, 3000);
+                },
+                error: function () {
+                    console.log('error');
+                }
+            });
+        }
+    </script>
+</div>

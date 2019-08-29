@@ -1,0 +1,12 @@
+{% for name, settings in networks.items() %}
+<tr>
+    <td>{{ name }}</td>
+    <td>{{ settings['IPAddress'] }}</td>
+    <td>{{ settings['MacAddress'] }}</td>
+    <td>
+        <button name="leave" class="btn btn-danger btn-xs"
+                onclick="leave('{{ name }}')">leave
+        </button>
+    </td>
+</tr>
+{% endfor %}

@@ -2,11 +2,11 @@ from app.container import bp
 from flask_login import login_required, current_user
 from flask import request, session, render_template, jsonify, current_app
 from app.container import services
-from app.container.forms import ContainerCreateForm
+from app.container.forms import ContainerCreateForm, ContainerUpdateForm
 from app.group.services import get_all_groups
 from app.image.services import get_images_tag_list
 from app.volume.services import get_volumes
-from app.network.services import get_networks
+from app.network.services import get_networks, join_container
 
 
 @bp.route('/')
@@ -72,8 +72,73 @@ def create_container():
     if form.validate_on_submit():
         result = services.run_container(endpoint_id, form)
         if result != 'ok':
+            form.name.errors = [result, ]
             return render_template('container/create.html', form=form, action='Create')
         else:
             return result
     current_app.logger.info(form.errors)
     return render_template('container/create.html', form=form, action='Create')
+
+
+@bp.route('/update/<container_hash>', methods=['GET', 'POST'])
+@login_required
+def update_container(container_hash):
+    endpoint_id = session.get('endpoint_id')
+    form = ContainerUpdateForm()
+    form.groups.choices = list((g.id, g.name) for g in get_all_groups())
+    form.networks.choices = list((n.id, n.name) for n in get_networks(endpoint_id))
+    container = services.get_container(endpoint_id, container_hash)
+    if container.db is not None:
+        form.access.data = container.db.access_id
+        form.groups.data = [g.id for g in container.db.groups]
+    networks = container.attrs['NetworkSettings']['Networks']
+    network_list = render_template('container/network-list.html', networks=networks)
+    return render_template('container/detail.html', container=container, form=form, network_list=network_list)
+
+
+@bp.route('/rename/<container_hash>', methods=['POST'])
+@login_required
+def rename_container(container_hash):
+    endpoint_id = session.get('endpoint_id')
+    new_name = request.json['name']
+    result = services.rename_container(endpoint_id, container_hash, new_name)
+    return jsonify({'result': result})
+
+
+@bp.route('/permission/<container_hash>', methods=['POST'])
+@login_required
+def update_permission(container_hash):
+    form = ContainerUpdateForm()
+    form.groups.choices = list((g.id, g.name) for g in get_all_groups())
+    if form.is_submitted():
+        result = services.update_permission(container_hash, form)
+    else:
+        result = form.errors
+    return jsonify({'result': result})
+
+
+@bp.route('/join/<container_hash>', methods=['POST'])
+@login_required
+def join_network(container_hash):
+    endpoint_id = session.get('endpoint_id')
+    network_id = request.json['network_id']
+    result = join_container(endpoint_id, network_id, container_hash)
+    return jsonify({'result': result})
+
+
+@bp.route('/networks/<container_hash>', methods=['GET'])
+@login_required
+def get_network_list(container_hash):
+    endpoint_id = session.get('endpoint_id')
+    container = services.get_container(endpoint_id, container_hash)
+    networks = container.attrs['NetworkSettings']['Networks']
+    network_list = render_template('container/network-list.html', networks=networks)
+    return network_list
+
+
+@bp.route('/leave/<container_hash>', methods=['POST'])
+@login_required
+def leave_network(container_hash):
+    endpoint_id = session.get('endpoint_id')
+    network_name = request.json['network_name']
+
