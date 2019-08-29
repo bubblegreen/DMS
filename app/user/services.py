@@ -29,7 +29,8 @@ def update_user(user_id, form):
         user = User.query.get(user_id)
         if form.password.data != '':
             user.set_password(form.password.data)
-        user.role_id = form.role.data
+        if user.role_id != 1:
+            user.role_id = form.role.data
         user.groups = Group.query.filter(Group.id.in_(form.groups.data)).all()
         permissions = []
         if form.image_permission.data != 0:

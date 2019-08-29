@@ -95,8 +95,7 @@ def register_confirm(token):
     user.activate()
     if user.email in current_app.config['ADMINS']:
         services.set_user_role(user, 'super')
-    else:
-        services.set_default_permission(user)
+    services.set_default_permission(user)
     flash('用户已激活，请登录。')
     return redirect(url_for('auth.login'))
 
