@@ -24,7 +24,7 @@ services:
       DATABASE_URL: root:test@db:3306
       MAIL_SERVER: smtp.qiye.aliyun.com
       MAIL_USERNAME: xuhang@aisino.com
-      MAIL_PASSWORD: Xu810823
+      MAIL_PASSWORD:
       ADMIN: xuhang@aisino.com
 #      SESSION_TIMEOUT: 60
     volumes:
