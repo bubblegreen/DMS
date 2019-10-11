@@ -208,7 +208,7 @@ def build_image(endpoint_id, form):
                 else:
                     form.url.errors.append('Dockerfile文件必须在项目根目录中')
                     return form
-                # todo validate 'FROM' statement of dockerfile
+                # validate 'FROM' statement of dockerfile
                 if not validate_dockerfile(dockerfile, endpoint_id):
                     form.url.errors.append('Dockerfile中，只能引入已有的镜像!')
                     return form

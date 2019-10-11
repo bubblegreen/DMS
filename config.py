@@ -23,3 +23,4 @@ class Config(object):
     # MAIL_PASSWORD = 'Qw!@#123'
     ADMINS = [os.environ.get('ADMIN') or 'xuhang@aisino.com']
     UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'temp_folder')
+    SQLALCHEMY_POOL_RECYCLE = 500
