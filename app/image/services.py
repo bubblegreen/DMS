@@ -231,7 +231,7 @@ def build_image(endpoint_id, form):
 def validate_dockerfile(dockerfile, endpoint_id):
     with open(dockerfile, 'r') as f:
         for line in f.readlines():
-            if 'form' in line.lower():
+            if 'from' in line.lower():
                 statement = line.strip()
                 base_image_name = statement[4:].strip()
                 images = get_images(endpoint_id)
