@@ -1,17 +1,17 @@
-create table access
+create table if not exists access
 (
   id   int auto_increment
     primary key,
   name varchar(20) not null
 );
 
-create table alembic_version
+create table if not exists alembic_version
 (
   version_num varchar(32) not null
     primary key
 );
 
-create table endpoint
+create table if not exists endpoint
 (
   id        int auto_increment
     primary key,
@@ -25,7 +25,7 @@ create table endpoint
 create index access_id
   on endpoint (access_id);
 
-create table permission
+create table if not exists permission
 (
   id    int auto_increment
     primary key,
@@ -37,7 +37,7 @@ create table permission
 create index ix_permission_name
   on permission (name);
 
-create table registry
+create table if not exists registry
 (
   id        int auto_increment
     primary key,
@@ -51,14 +51,14 @@ create table registry
 create index access_id
   on registry (access_id);
 
-create table role
+create table if not exists role
 (
   id   int auto_increment
     primary key,
   name varchar(140) not null
 );
 
-create table user
+create table if not exists user
 (
   id            int auto_increment
     primary key,
@@ -74,7 +74,7 @@ create table user
     foreign key (role_id) references role (id)
 );
 
-create table container
+create table if not exists container
 (
   id          int auto_increment
     primary key,
@@ -94,7 +94,7 @@ create index access_id
 create index creator_id
   on container (creator_id);
 
-create table `group`
+create table if not exists `group`
 (
   id          int auto_increment
     primary key,
@@ -109,7 +109,7 @@ create table `group`
     foreign key (creator_id) references user (id)
 );
 
-create table container2group
+create table if not exists container2group
 (
   container_id int not null,
   group_id     int not null,
@@ -123,7 +123,7 @@ create table container2group
 create index group_id
   on container2group (group_id);
 
-create table endpoint2group
+create table if not exists endpoint2group
 (
   endpoint_id int not null,
   group_id    int not null,
@@ -140,7 +140,7 @@ create index group_id
 create index creator_id
   on `group` (creator_id);
 
-create table image
+create table if not exists image
 (
   id          int auto_increment
     primary key,
@@ -162,7 +162,7 @@ create index access_id
 create index creator_id
   on image (creator_id);
 
-create table image2group
+create table if not exists image2group
 (
   image_id int not null,
   group_id int not null,
@@ -176,7 +176,7 @@ create table image2group
 create index group_id
   on image2group (group_id);
 
-create table network
+create table if not exists network
 (
   id          int auto_increment
     primary key,
@@ -196,7 +196,7 @@ create index access_id
 create index creator_id
   on network (creator_id);
 
-create table network2group
+create table if not exists network2group
 (
   network_id int not null,
   group_id   int not null,
@@ -210,7 +210,7 @@ create table network2group
 create index group_id
   on network2group (group_id);
 
-create table registry2group
+create table if not exists registry2group
 (
   registry int not null,
   `group`  int not null,
@@ -227,7 +227,7 @@ create index `group`
 create index role_id
   on user (role_id);
 
-create table user2group
+create table if not exists user2group
 (
   user_id  int not null,
   group_id int not null,
@@ -241,7 +241,7 @@ create table user2group
 create index group_id
   on user2group (group_id);
 
-create table user2permission
+create table if not exists user2permission
 (
   user_id       int not null,
   permission_id int not null,
@@ -255,7 +255,7 @@ create table user2permission
 create index permission_id
   on user2permission (permission_id);
 
-create table volume
+create table if not exists volume
 (
   id          int auto_increment
     primary key,
@@ -275,7 +275,7 @@ create index access_id
 create index creator_id
   on volume (creator_id);
 
-create table volume2group
+create table if not exists volume2group
 (
   volume_id int not null,
   group_id  int not null,
