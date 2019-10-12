@@ -67,14 +67,14 @@
                                             <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">host</span>
-                                                    {{ name(class='form-control', placeholder='e.g. 80 or 1.2.3.4:80
+                                                    {{ host(class='form-control', placeholder='e.g. 80 or 1.2.3.4:80
                                                     (optional)') }}
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">container</span>
-                                                    {{ value(class='form-control', placeholder='e.g. 80') }}
+                                                    {{ container(class='form-control', placeholder='e.g. 80') }}
                                                 </div>
                                             </div>
                                         </div>
@@ -82,11 +82,11 @@
                                         <div class="row">
                                             <div class="col-sm-2" style="display: block;margin-right: 10px"></div>
                                             <div class="col-sm-4">
-                                                {{ name(class='form-control', placeholder='e.g. 80 or 1.2.3.4:80
+                                                {{ form.host_port(class='form-control', placeholder='e.g. 80 or 1.2.3.4:80
                                                 (optional)') }}
                                             </div>
                                             <div class="col-sm-4">
-                                                {{ value(class='form-control', placeholder='e.g. 80') }}
+                                                {{ form.container_port(class='form-control', placeholder='e.g. 80') }}
                                             </div>
                                             <div class="col-sm-1">
                                                 <button class="btn btn-danger" name="rmLabel"><i

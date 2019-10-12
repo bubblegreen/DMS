@@ -197,8 +197,10 @@ def run_container(endpoint_id, form):
         db.session.commit()
         return 'ok'
     except (APIError, ContainerError, ImageNotFound) as ex:
+        current_app.logger.error(ex)
         return ex
     except DBAPIError as ex:
+        current_app.logger.error(ex)
         if container_obj is not None:
             container_obj.remove(force=True)
         return ex
