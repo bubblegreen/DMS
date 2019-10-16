@@ -47,3 +47,9 @@ flask run
 * 停止：docker-compose stop
 * 启动：docker-compose start
 * 删除：docker-compose down
+
+
+###Endpoint配置
+1、开启docker remote api
+* 修改/lib/systemd/system/docker.service文件，去掉ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock中的"-H fd://"部分
+* 在/etc/docker/daemon.json文件中添加{"hosts": ["tcp://0.0.0.0:2375", "unix:///var/run/docker.sock"]}
