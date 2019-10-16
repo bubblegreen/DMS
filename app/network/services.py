@@ -62,6 +62,18 @@ def get_network_by_hash(endpoint_id, network_hash):
         return None
 
 
+def get_network_by_name(endpoint_id, network_name='bridge'):
+    endpoint = Endpoint.query.get(endpoint_id)
+    try:
+        client = docker_client(endpoint.url)
+        network = client.networks.get(network_name)
+        network.db = Network.query.filter(Network.hash == network.id).first()
+        return network
+    except (DockerException, APIError) as ex:
+        current_app.logger.error(ex)
+        return None
+
+
 def update_network(network_hash, form):
     try:
         network_in_db = Network.query.filter(Network.hash == network_hash).first()

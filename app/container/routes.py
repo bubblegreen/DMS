@@ -6,7 +6,7 @@ from app.container.forms import ContainerCreateForm, ContainerUpdateForm
 from app.group.services import get_all_groups
 from app.image.services import get_images_tag_list
 from app.volume.services import get_volumes
-from app.network.services import get_networks, join_container
+from app.network.services import get_networks, join_container, get_network_by_name
 
 
 @bp.route('/')
@@ -69,6 +69,9 @@ def create_container():
     form.volume.set_volumes(volume_choices)
     form.volume_name.choices = volume_choices
     form.network.choices = list((n.id, n.name) for n in get_networks(endpoint_id))
+    default = get_network_by_name(endpoint_id)
+    form.network.default = default.id
+    form.process()
     if form.validate_on_submit():
         result = services.run_container(endpoint_id, form)
         if result != 'ok':
