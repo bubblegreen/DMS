@@ -97,6 +97,7 @@ def add_endpoint(form):
         endpoint.url = form.url.data
         endpoint.groups = Group.query.filter(Group.id.in_(form.groups.data)).all()
         endpoint.access_id = form.access.data
+        endpoint.creator_id = current_user.id
         db.session.add(endpoint)
         db.session.commit()
         return endpoint

@@ -56,6 +56,8 @@ class User(db.Model):
     containers = db.relationship('Container', backref='creator')
     volumes = db.relationship('Volume', backref='creator')
     networks = db.relationship('Network', backref='creator')
+    endpoints = db.relationship('Endpoint', backref='creator')
+    registries = db.relationship('Registry', backref='creator')
 
     @property
     def username(self):
@@ -213,6 +215,8 @@ class Endpoint(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     url = db.Column(db.String(100), nullable=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    create_time = db.Column(db.DateTime, default=db.func.now())
     access_id = db.Column(db.Integer, db.ForeignKey('access.id'), nullable=False)
     access = db.relationship('Access', foreign_keys='Endpoint.access_id', uselist=False)
     groups = db.relationship('Group', secondary=endpoint2group, backref=db.backref('endpoints'))
@@ -222,6 +226,8 @@ class Registry(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     url = db.Column(db.String(100), nullable=False)
+    creator_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    create_time = db.Column(db.DateTime, default=db.func.now())
     access_id = db.Column(db.Integer, db.ForeignKey('access.id'), nullable=False)
     access = db.relationship('Access', foreign_keys='Registry.access_id', uselist=False)
     groups = db.relationship('Group', secondary=registry2group, backref=db.backref('registries'))

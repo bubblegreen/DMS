@@ -39,6 +39,9 @@ def create_app(config_class=Config):
     from app.endpoint import bp as endpoint_bp
     app.register_blueprint(endpoint_bp, url_prefix='/endpoint')
 
+    from app.registry import bp as registry_bp
+    app.register_blueprint(registry_bp, url_prefix='/registry')
+
     from app.group import bp as group_bp
     app.register_blueprint(group_bp, url_prefix='/group')
 
