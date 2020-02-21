@@ -82,7 +82,7 @@
     </div>
     <script type="text/javascript">
         var csrftoken = "{{ csrf_token() }}";
-        var id = "{{ endpoint_id }}";
+        var id = "{{ registry_id }}";
         $().ready(function () {
             $('#groups').select2({
                 allowClear: true,
@@ -104,14 +104,14 @@
                 }
             });
             $.ajax({
-                url: '/endpoint/new',
+                url: '/registry/new',
                 type: 'post',
                 data: $('form').serialize(),
                 processData: false,  // 不处理数据
                 // contentType: false,
                 success: function (result) {
                     if (result === 'ok') {
-                        let viewUrl = '/endpoint';
+                        let viewUrl = '/registry';
                         dm.showIndexView(viewUrl);
                     } else {
                         dm.loadView(result);
@@ -133,14 +133,14 @@
                 }
             });
             $.ajax({
-                url: '/endpoint/update/' + id,
+                url: '/registry/update/' + id,
                 type: 'post',
                 data: $('form').serialize(),
                 processData: false,  // 不处理数据
                 // contentType: false,
                 success: function (result) {
                     if (result === 'ok') {
-                        let viewUrl = '/endpoint';
+                        let viewUrl = '/registry';
                         dm.showIndexView(viewUrl);
                     } else {
                         dm.loadView(result);
