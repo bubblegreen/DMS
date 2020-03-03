@@ -59,7 +59,7 @@
         var csrftoken = "{{ csrf_token() }}";
         $().ready(function () {
             let table = $('#table').DataTable({
-                ajax: '/registry/list',
+                ajax: '/registry/db_list',
                 columnDefs: [
                     {
                         targets: 0,

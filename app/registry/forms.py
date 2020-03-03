@@ -9,7 +9,7 @@ import requests
 from sqlalchemy import or_
 
 
-class AddEndpointForm(FlaskForm):
+class AddRegistryForm(FlaskForm):
     name = StringField('名称', validators=[DataRequired()])
     url = StringField('URL', validators=[DataRequired()])
     access = SelectField('权限范围', choices=[(1, '不可见'), (2, '组内'), (3, '公开')], coerce=int)
@@ -36,7 +36,7 @@ class AddEndpointForm(FlaskForm):
             raise ValidationError('URL输入有误，请检查！')
 
 
-class UpdateEndpointForm(FlaskForm):
+class UpdateRegistryForm(FlaskForm):
     name = StringField('名称', validators=[DataRequired()])
     url = StringField('URL', validators=[DataRequired()])
     access = SelectField('权限范围', choices=[(1, '不可见'), (2, '组内'), (3, '公开')], coerce=int)
