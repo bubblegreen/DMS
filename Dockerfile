@@ -5,6 +5,7 @@ COPY *.py requirements.txt /opt/app/
 COPY app /opt/app/app
 WORKDIR /opt/app
 RUN pip install -r requirements.txt -i http://mirrors.aliyun.com/pypi/simple --trusted-host mirrors.aliyun.com
+RUN flask db init && flask db migrate && flask db upgrade && flask generate init
 VOLUME /opt/app/logs
 #ENV SECRET_KEY=com.aisino.testcenter.testcenter3093 \
 #    SESSION_TIMEOUT=60 \
