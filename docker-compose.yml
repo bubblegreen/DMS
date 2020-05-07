@@ -10,7 +10,7 @@ services:
       - "3306:3306"
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
     volumes:
-      - ./init_sql:/docker-entrypoint-initdb.d
+#      - ./init_sql:/docker-entrypoint-initdb.d
       - ./dbdata://var/lib/mysql
     networks:
       - docker
@@ -22,7 +22,7 @@ services:
 #    image: dms:0.1
     environment:
       SECRET_KEY: com.aisino.testcenter.testcenter3093
-      DATABASE_URL: root:test@db:3306
+      DATABASE_URL: mysql+pymysql://root:test@db:3306
       MAIL_SERVER: smtp.qiye.aliyun.com
       MAIL_USERNAME: xuhang@aisino.com
       MAIL_PASSWORD:
