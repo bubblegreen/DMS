@@ -1,0 +1,224 @@
+<div class="container">
+    <div class="row">
+        <div id="content" class="col-lg-12">
+            <!-- PAGE HEADER-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-header">
+                        <!-- BREADCRUMBS -->
+                        <ul class="breadcrumb">
+                            <li>
+                                <i class="fa fa-home"></i>
+                                <a href="#">Containers</a>
+                            </li>
+                        </ul>
+                        <!-- /BREADCRUMBS -->
+                    </div>
+                </div>
+            </div>
+            <!-- /PAGE HEADER -->
+            <!--row-->
+            <div id="main">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="box-title">
+                                <div class="tools">
+                                    <a href="javascript:;" class="collapse">
+                                        <i class="fa fa-chevron-up"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="box-body" style="display: block">
+                                <form>
+                                    <div class="form-check" id="server-checks">
+                                        {% for choice in form.choices %}
+                                            {{ choice(class='form-check-input') }}
+                                            {{ choice.label(class='form-check-label') }}
+                                        {% endfor %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <menu>
+                    {% if permission == 'create' %}
+                        <div class="btn-group">
+                            <button id="start" class="btn btn-success" onclick="Container.action('start')" disabled><i
+                                    class="fa fa-play"></i>
+                                启动
+                            </button>
+                            <button id="stop" class="btn btn-danger" onclick="Container.action('stop')" disabled><i
+                                    class="fa fa-stop"></i>
+                                停止
+                            </button>
+                            <button id="restart" class="btn btn-primary" onclick="Container.action('restart')" disabled>
+                                <i
+                                        class="fa fa-refresh"></i>
+                                重启
+                            </button>
+                            <button id="remove" class="btn btn-danger" onclick="Container.action('remove')" disabled><i
+                                    class="fa fa-trash-o"></i>
+                                删除
+                            </button>
+                        </div>
+                        <button id="add" class="btn btn-primary" onclick="dm.show_edit_view('container', 'new', null)">
+                            <i
+                                    class="fa fa-plus"></i> 添加Container
+                        </button>
+                    {% endif %}
+                </menu>
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- BOX -->
+                        <div class="box border primary">
+                            <div class="box-title">
+                                <h4><i class="fa fa-bars"></i>Containers</h4>
+                            </div>
+                            <div class="box-body big">
+                                <table id="table" class="table select">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: center"><input type="checkbox" name="selectAll"
+                                                                              id="select-all"></th>
+                                        <th>名称</th>
+                                        <th>State</th>
+                                        <th>Stack</th>
+                                        <th>Image</th>
+                                        <th>IP Address</th>
+                                        <th>Publish Port</th>
+                                        <th>Created</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /BOX -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var csrftoken = "{{ csrf_token() }}";
+        $().ready(function () {
+            let table = $('#table').DataTable({
+                ajax: '/toolbox/containers',
+                columnDefs: [
+                    {
+                        targets: 0,
+                        data: null,
+                        defaultContent: '',
+                        orderable: false,
+                        searchable: false,
+                        className: 'dt-body-center',
+                        render: function (data, type, full, meta) {
+                            if (data[8]) {
+                                return '<input type="checkbox" value="' + $("<div/>").text(data[0]).html() + '">';
+                            } else {
+                                return '';
+                            }
+                        }
+                    },
+                    {
+                        targets: 1,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<a href="javascript:;" onclick="dm.show_edit_view(\'container\', \'update\', \'' + data[0] + '\')">' + data[1]
+                        }
+                    },
+                    {
+                        targets: 2,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            if (data[2] === 'running') {
+                                return '<span class="label label-success">' + data[2] + '</span>';
+                            } else if (data[2] === 'exited') {
+                                return '<span class="label label-danger">' + 'stopped' + '</span>';
+                            } else {
+                                return '<span class="label label-info">' + data[2] + '</span>';
+                            }
+                        }
+                    },
+                    {
+                        targets: 3,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[3] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 4,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[4] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 5,
+                        data: null,
+                        searchable: false,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[5] + '</span>';
+                        }
+                    },
+                    {
+                        targets: 6,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            let innerHtml = '';
+                            let prefix = '<i class="fa fa-external-link"></i>';
+                            for (let i in data[6]) {
+                                innerHtml = innerHtml + prefix + data[6][i] + '&nbsp;';
+                            }
+                            return innerHtml;
+                        }
+                    },
+                    {
+                        targets: 7,
+                        data: null,
+                        render: function (data, type, full, meta) {
+                            return '<span>' + data[7] + '</span>';
+                        }
+                    }
+                ],
+                order: [[2, 'asc']]
+            });
+            // Handle click on "Select all" control
+            $('#select-all').on('click', function () {
+                // Get all rows with search applied
+                let rows = table.rows({'search': 'applied'}).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input[type="checkbox"]', rows).prop('checked', this.checked);
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
+                if (row_selected.length === 0) {
+                    $('.btn-group').children().attr('disabled', true);
+                } else {
+                    $('.btn-group').children().attr('disabled', false);
+                }
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#table tbody').on('change', 'input[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    let el = $('#select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+                let row_selected = $('#table tbody input[type="checkbox"]:checked');
+                if (row_selected.length === 0) {
+                    $('.btn-group').children().attr('disabled', true);
+                } else {
+                    $('.btn-group').children().attr('disabled', false);
+                }
+            });
+        });
+    </script>
+</div>

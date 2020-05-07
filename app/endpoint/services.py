@@ -5,6 +5,7 @@ from app.utils.docker import docker_client
 from app import db
 from flask_login import current_user
 from multiprocessing.pool import Pool
+from sqlalchemy import or_, and_
 
 
 def check_endpoint_available(endpoint):
@@ -27,7 +28,7 @@ def get_all_endpoint_infos():
     results = []
     with Pool(processes=4) as pool:
         for endpoint in endpoint_list:
-            result = pool.apply_async(get_endpoint_info, (endpoint, ))
+            result = pool.apply_async(get_endpoint_info, (endpoint,))
             results.append(result)
         pool.close()
         pool.join()
@@ -81,10 +82,15 @@ def get_all_endpoint_from_db():
         endpoints = Endpoint.query.all()
     else:
         if current_user.permission_info.get('endpoint', None) is not None:
-            endpoints = Endpoint.query.filter(Endpoint.access.has(Access.name == 'all')).all()
             group_ids = [g.id for g in current_user.groups]
-            endpoints.extend(Endpoint.query.filter(Endpoint.access.has(Access.name == 'group')).filter(
-                Endpoint.groups.any(Group.id.in_(group_ids))).all())
+            endpoints = Endpoint.query.filter(
+                or_(Endpoint.access.has(Access.name == 'all'), Endpoint.creator_id == current_user.id,
+                    and_(Endpoint.access.has(Access.name == 'group'),
+                         Endpoint.groups.any(Group.id.in_(group_ids))))).all()
+            # endpoints = Endpoint.query.filter(Endpoint.access.has(Access.name == 'all')).all()
+            # group_ids = [g.id for g in current_user.groups]
+            # endpoints.extend(Endpoint.query.filter(Endpoint.access.has(Access.name == 'group')).filter(
+            #     Endpoint.groups.any(Group.id.in_(group_ids))).all())
         else:
             endpoints = []
     return endpoints
