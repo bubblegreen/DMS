@@ -60,6 +60,9 @@ def create_app(config_class=Config):
     from app.network import bp as network_bp
     app.register_blueprint(network_bp, url_prefix='/network')
 
+    from app.toolbox import bp as toolbox_bp
+    app.register_blueprint(toolbox_bp, url_prefix='/toolbox')
+
     # from app.sampleCalculation import bp as sc_bp
     # app.register_blueprint(sc_bp, url_prefix='/sc')
 

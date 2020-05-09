@@ -18,4 +18,4 @@ def index():
     form = DockerServerForm()
     form.servers.choices = list((e.id, e.name) for e in get_all_endpoint_from_db())
 
-    return render_template('toolbox/container-batch.html', permission=permission)
+    return render_template('toolbox/container-batch.html', permission=permission, form=form)
