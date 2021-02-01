@@ -11,7 +11,7 @@ services:
     command: "--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
     volumes:
 #      - ./init_sql:/docker-entrypoint-initdb.d
-      - ./dbdata://var/lib/mysql
+      - ./dbdata:/var/lib/mysql
     networks:
       - docker
     restart: always
@@ -24,9 +24,9 @@ services:
       SECRET_KEY: com.aisino.testcenter.testcenter3093
       DATABASE_URL: mysql+pymysql://root:test@db:3306
       MAIL_SERVER: smtp.qiye.aliyun.com
-      MAIL_USERNAME: xuhang@aisino.com
+      MAIL_USERNAME: 
       MAIL_PASSWORD:
-      ADMIN: xuhang@aisino.com
+      ADMIN: 
 #      SESSION_TIMEOUT: 60
     volumes:
       - ./logs:/opt/app/logs
