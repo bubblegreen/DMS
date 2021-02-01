@@ -8,7 +8,7 @@ A Docker Management System
 ### 创建.env文件
 * DATABASE_URL= ：数据库连接信息，eg. root:test@localhost:3306
 * MAIL_SERVER= ：邮箱服务地址，eg. smtp.qiye.aliyun.com
-* MAIL_USERNAME= ：邮箱用户名，eg. xuhang@aisino.com
+* MAIL_USERNAME= ：邮箱用户名，eg. xuhang@xxx.com
 * MAIL_PASSWORD= ：邮箱密码
 * SESSION_TIMEOUT= ：session超时时间，单位分钟，eg. 60
 
